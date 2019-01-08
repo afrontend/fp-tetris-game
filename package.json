@@ -1,0 +1,45 @@
+{
+  "name": "tetris_with_javascript",
+  "version": "0.1.0",
+  "description": "자바스크립트로 만든 테트리스 게임",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/afrontend/tetris.git"
+  },
+  "keywords": [
+    "tetris",
+    "javascript",
+    "lodash",
+    "ramda",
+    "react"
+  ],
+  "author": "<frontend.wordpress@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/afrontend/tetris/issues"
+  },
+  "private": true,
+  "dependencies": {
+    "keyboard-handler": "^2.0.0",
+    "lodash": "^4.17.11",
+    "ramda": "^0.26.1",
+    "react": "^16.7.0",
+    "react-dom": "^16.7.0",
+    "react-scripts": "2.1.2"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
+}

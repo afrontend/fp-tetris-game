@@ -1,0 +1,19 @@
+.container {
+  position: relative;
+}
+
+.App {
+  align-items: flex-start;
+  background: grey;
+  border-right: 1px solid black;
+  display: flex;
+  flex-wrap: wrap;
+  float: left;
+  margin: auto;
+  width: 502px;
+}
+
+.App .block {
+  height: 52px;
+  width: 50px;
+}
