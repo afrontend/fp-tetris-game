@@ -377,10 +377,10 @@ class App extends Component {
     return (
       <div className="container">
         <div className="App">
-          <Blocks window={getDebugWindow(_.cloneDeep(this.state.bgPanel))} />
+          <Blocks window={getDebugWindow([])} />
         </div>
         <div className="App">
-          <Blocks window={getDebugWindow(_.cloneDeep(this.state.toolPanel))} />
+          <Blocks window={getDebugWindow([])} />
         </div>
         <div className="App">
           <Blocks window={getWindow(this.state.bgPanel, this.state.toolPanel)} />
