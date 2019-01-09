@@ -1,12 +1,12 @@
-
 # Tetris with javascript
 
 자바스크립트로 만든 테트리스 게임. 아래 라이브러리를 사용했다.
 
-* lodash
-* ramda
-* react
-* keyboard-handler
+* [react](https://reactjs.org/)
+* [create react app](https://github.com/facebook/create-react-app)
+* [lodash](https://lodash.com/)
+* [ramda](https://ramdajs.com/)
+* [keyboard-handler](https://github.com/emiljohansson/keyboard-handler)
 
 # Install
 
@@ -20,5 +20,5 @@
 
 # Todo
 
-* 블록이 모두 차면 아래 마지막 라인 삭제
 * 리셋 기능
+* 점수 표시
