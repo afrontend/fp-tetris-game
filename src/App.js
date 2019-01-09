@@ -31,7 +31,7 @@ const repeatItem = (initData, config = CONFIG) => (
     initData())
   )
 );
-const convert1DimAry = (ary) => (_.flattenDepth(_.cloneDeep(ary)));
+const convert1DimAry = (panel) => (_.flattenDepth(_.cloneDeep(panel)));
 const convert2DimAry = (ary) => (_.chunk(ary, CONFIG.columns));
 const createPanel = (config = CONFIG) => {
   return R.repeat({}, config.rows).map(() => (repeatItem(() => (createItem(config)))));
@@ -57,17 +57,17 @@ const isOnTheRightEdge = (panel) => {
 
 const isOverlap = (bgPanel, toolPanel) => {
   return _.some(
-    R.zipWith((background, tool) => {
-      return (!isBlankItem(background) && !isBlankItem(tool)) ? true : false;
+    R.zipWith((bg, tool) => {
+      return (!isBlankItem(bg) && !isBlankItem(tool)) ? true : false;
     }, convert1DimAry(bgPanel), convert1DimAry(toolPanel))
     , (item) => (item === true));
 };
 
-const overwritePanel = (backgroundPanel, toolPanel) => {
+const assignPanel = (bgPanel, toolPanel) => {
   return convert2DimAry(
-    R.zipWith((background, tool) => {
-      return isBlankItem(tool) ? background : tool;
-    }, convert1DimAry(backgroundPanel), convert1DimAry(toolPanel))
+    R.zipWith((bg, tool) => {
+      return isBlankItem(tool) ? bg : tool;
+    }, convert1DimAry(bgPanel), convert1DimAry(toolPanel))
   );
 };
 
@@ -262,7 +262,7 @@ const panelList = [
   R.compose(paintS, createEmptyPanel),
   R.compose(paintZ, createEmptyPanel),
 ];
-const getWindow = R.compose(convert1DimAry, overwritePanel);
+const getWindow = R.compose(convert1DimAry, assignPanel);
 const getDebugWindow = R.compose(convert1DimAry);
 
 // components
@@ -290,7 +290,7 @@ const createRandomToolPanel = (panelList, bgPanel) => {
 
 const scrollDownPanel = (bgPanel, toolPanel) => {
   const overlap = isBottom(toolPanel) || isOverlap(bgPanel, downPanel(toolPanel));
-  const newBgPanel = overlap ? overwritePanel(bgPanel, toolPanel) : bgPanel;
+  const newBgPanel = overlap ? assignPanel(bgPanel, toolPanel) : bgPanel;
   const newToolPanel = overlap ? createRandomToolPanel(panelList, newBgPanel) : downPanel(toolPanel);
   return {
     bgPanel: newBgPanel,
