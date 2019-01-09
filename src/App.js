@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 import * as R from 'ramda';
-import * as keyboard from 'keyboard-handler'
+import * as keyboard from 'keyboard-handler';
 import './App.css';
 
 // configuration
@@ -15,13 +15,15 @@ const CONFIG = {
 
 // create panel
 
-const addRowColumn = (panel) => (
-  panel.map((rows, rIndex) => (
-    rows.map((item, cIndex) => (
-      Object.assign(item, { row: rIndex, column: cIndex })
-    ))
-  ))
-);
+/*
+ * const addRowColumn = (panel) => (
+ *   panel.map((rows, rIndex) => (
+ *     rows.map((item, cIndex) => (
+ *       Object.assign(item, { row: rIndex, column: cIndex })
+ *     ))
+ *   ))
+ * );
+ */
 
 const createItem = (config = CONFIG) => ({ color: config.color });
 const repeatItem = (initData, config = CONFIG) => (
@@ -33,14 +35,13 @@ const convert1DimAry = (ary) => (_.flattenDepth(_.cloneDeep(ary)));
 const convert2DimAry = (ary) => (_.chunk(ary, CONFIG.columns));
 const createPanel = (config = CONFIG) => {
   return R.repeat({}, config.rows).map(() => (repeatItem(() => (createItem(config)))));
-}
+};
 
 // check a panel
 
 const isBlankItem = (item, config = CONFIG) => (item.color === config.color);
 const isBottom = (panel) => (!isBlankLine(_.last(panel)));
 const isBlankLine = (ary) => (_.every(ary, (item) => (isBlankItem(item))));
-const isFullLine = (ary) => (_.every(ary, (item) => (!isBlankItem(item))));
 
 const isOnTheLeftEdge = (panel) => {
   return !!_.reduce(panel, (count, rows) => {
@@ -87,7 +88,7 @@ const leftPanel = (panel) => {
     rows.shift();
     rows.push(createItem());
     return rows;
-  })
+  });
 };
 
 const rightPanel = (panel) => {
@@ -96,7 +97,7 @@ const rightPanel = (panel) => {
     rows.pop();
     rows.unshift(createItem());
     return rows;
-  })
+  });
 };
 
 const flipMatrix = matrix => (
@@ -122,7 +123,7 @@ const rotateRegion = (area, panel) => {
     });
   });
   return newPanel;
-}
+};
 
 const rotatePanel = (panel, moreSize = 2) => {
   const zeroPoints = [];
@@ -132,7 +133,7 @@ const rotatePanel = (panel, moreSize = 2) => {
       ? zeroPoints.push(Object.assign(item, { row: rIndex, column: cIndex }))
       : item
     ))
-  ))
+  ));
 
   const area = zeroPoints.length === 0
     ? {
@@ -163,7 +164,7 @@ const rotatePanel = (panel, moreSize = 2) => {
   } : _.clone(area);
 
   return rotateRegion(newArea, panel);
-}
+};
 
 // paint on panel
 
@@ -250,12 +251,6 @@ const paintZ = (panel) => {
   ], 'red');
 };
 
-const createBigPanel = (size) => (createPanel({
-  rows: size,
-  columns: size,
-  color: 'grey',
-}));
-
 const createEmptyPanel = () => (createPanel());
 const panelList = [
   R.compose(paintO, createEmptyPanel),
@@ -300,7 +295,7 @@ const scrollDownPanel = (bgPanel, toolPanel) => {
   return {
     bgPanel: newBgPanel,
     toolPanel: newToolPanel
-  }
+  };
 };
 
 const leftKey = (bgPanel, toolPanel) => {
@@ -309,7 +304,7 @@ const leftKey = (bgPanel, toolPanel) => {
   return {
     bgPanel,
     toolPanel:  overlap ? toolPanel : leftPanel(toolPanel)
-  }
+  };
 };
 
 const rightKey = (bgPanel, toolPanel) => {
@@ -318,7 +313,7 @@ const rightKey = (bgPanel, toolPanel) => {
   return {
     bgPanel,
     toolPanel: overlap ? toolPanel : rightPanel(toolPanel)
-  }
+  };
 };
 
 const getColorCount = (panel) => (
@@ -361,7 +356,7 @@ class App extends Component {
     this.state = {
       bgPanel: createEmptyPanel(),
       toolPanel: createRandomToolPanel(panelList)
-    }
+    };
 
     this.state.timer = setInterval(() => {
       this.setState((state) => {
@@ -375,7 +370,7 @@ class App extends Component {
           return isValidKey(e.which) ? processKey(e.which)(state.bgPanel, state.toolPanel) : {};
         });
       }.bind(this));
-    })
+    });
   }
 
   render() {
