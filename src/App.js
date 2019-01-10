@@ -21,10 +21,12 @@ const repeatItem = (initData, config = CONFIG) => (
     initData())
   )
 );
+const getEmptyLine = (config = CONFIG) => (repeatItem(() => (createItem(config))));
+const getEmptyLines = (count) => (R.repeat({}, count).map(() => (getEmptyLine())));
 const convert1DimAry = (panel) => (_.flattenDepth(_.cloneDeep(panel)));
 const convert2DimAry = (ary) => (_.chunk(ary, CONFIG.columns));
 const createPanel = (config = CONFIG) => {
-  return R.repeat({}, config.rows).map(() => (repeatItem(() => (createItem(config)))));
+  return R.repeat({}, config.rows).map(() => (getEmptyLine(config)));
 };
 
 // check a panel
@@ -32,6 +34,7 @@ const createPanel = (config = CONFIG) => {
 const isBlankItem = (item, config = CONFIG) => (item.color === config.color);
 const isBottom = (panel) => (!isBlankLine(_.last(panel)));
 const isBlankLine = (ary) => (_.every(ary, (item) => (isBlankItem(item))));
+const isFullLine = (ary) => (_.every(ary, (item) => (!isBlankItem(item))));
 
 const isOnTheLeftEdge = (panel) => {
   return !!_.reduce(panel, (count, rows) => {
@@ -67,7 +70,7 @@ const downPanel = R.curry(
   (config, panel) => {
     const newPanel = _.cloneDeep(panel);
     newPanel.pop();
-    newPanel.unshift(repeatItem(() => (createItem(config))));
+    newPanel.unshift(getEmptyLine(config));
     return newPanel;
   }
 )(CONFIG);
@@ -242,9 +245,10 @@ const panelList = [
 const getWindow = R.compose(convert1DimAry, assignPanel);
 const getDebugWindow = R.compose(convert1DimAry);
 
+// make tool panel
+
 const createRandomToolPanel = (panelList, bgPanel) => {
   const newPanel = panelList[_.random(0, panelList.length -1)]();
-  // const newPanel = _.last(panelList)();
   const overlap = bgPanel ? isOverlap(bgPanel, newPanel) : false;
   return overlap ? createEmptyPanel() : newPanel;
 };
@@ -256,7 +260,7 @@ const scrollDownPanel = (bgPanel, toolPanel) => {
   const newBgPanel = overlap ? assignPanel(bgPanel, toolPanel) : bgPanel;
   const newToolPanel = overlap ? createRandomToolPanel(panelList, newBgPanel) : downPanel(toolPanel);
   return {
-    bgPanel: newBgPanel,
+    bgPanel: removeFullLine(newBgPanel),
     toolPanel: newToolPanel
   };
 };
@@ -310,6 +314,24 @@ const processKey = R.curry((key, bgPanel, toolPanel) => (
   )).fn(bgPanel, toolPanel))
 );
 const isValidKey = (key) => (_.some(keyFnList, (item) => (item.key === key)));
+
+// remove line on panel
+
+function addEmptyLine(panel, config = CONFIG) {
+  const newPanel = _.cloneDeep(panel);
+  const count = config.rows - newPanel.length;
+  const emptyLines = getEmptyLines(count);
+  newPanel.unshift(...emptyLines);
+  return newPanel;
+};
+
+const removeFullLine = (panel) => {
+  const newPanel = _.filter(_.cloneDeep(panel), (row) => (
+    !isFullLine(row)
+  ));
+
+  return addEmptyLine(newPanel);
+};
 
 // components
 
