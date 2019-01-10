@@ -184,18 +184,6 @@ const paintI = (panel) => {
   ], 'lime');
 };
 
-const paintH = (panel) => {
-  return paint(panel, [
-    {row: 0, column: 4},
-    {row: 0, column: 6},
-    {row: 1, column: 4},
-    {row: 1, column: 5, zeroPoint: true},
-    {row: 1, column: 6},
-    {row: 2, column: 4},
-    {row: 2, column: 6},
-  ], 'white');
-};
-
 const paintT = (panel) => {
   return paint(panel, [
     {row: 0, column: 5},
@@ -245,7 +233,6 @@ const createEmptyPanel = () => (createPanel());
 const panelList = [
   R.compose(paintO, createEmptyPanel),
   R.compose(paintI, createEmptyPanel),
-  R.compose(paintH, createEmptyPanel),
   R.compose(paintT, createEmptyPanel),
   R.compose(paintJ, createEmptyPanel),
   R.compose(paintL, createEmptyPanel),
