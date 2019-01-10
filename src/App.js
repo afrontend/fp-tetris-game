@@ -21,20 +21,20 @@ const repeatItem = (initData, config = CONFIG) => (
     initData())
   )
 );
-const getEmptyLine = (config = CONFIG) => (repeatItem(() => (createItem(config))));
-const getEmptyLines = (count) => (R.repeat({}, count).map(() => (getEmptyLine())));
+const getEmptyRow = (config = CONFIG) => (repeatItem(() => (createItem(config))));
+const getEmptyRows = (count) => (R.repeat({}, count).map(() => (getEmptyRow())));
 const convert1DimAry = (panel) => (_.flattenDepth(_.cloneDeep(panel)));
 const convert2DimAry = (ary) => (_.chunk(ary, CONFIG.columns));
 const createPanel = (config = CONFIG) => {
-  return R.repeat({}, config.rows).map(() => (getEmptyLine(config)));
+  return R.repeat({}, config.rows).map(() => (getEmptyRow(config)));
 };
 
 // check a panel
 
 const isBlankItem = (item, config = CONFIG) => (item.color === config.color);
-const isBottom = (panel) => (!isBlankLine(_.last(panel)));
-const isBlankLine = (ary) => (_.every(ary, (item) => (isBlankItem(item))));
-const isFullLine = (ary) => (_.every(ary, (item) => (!isBlankItem(item))));
+const isBottom = (panel) => (!isBlankRow(_.last(panel)));
+const isBlankRow = (ary) => (_.every(ary, (item) => (isBlankItem(item))));
+const isFullRow = (ary) => (_.every(ary, (item) => (!isBlankItem(item))));
 
 const isOnTheLeftEdge = (panel) => {
   return !!_.reduce(panel, (count, rows) => {
@@ -70,7 +70,7 @@ const downPanel = R.curry(
   (config, panel) => {
     const newPanel = _.cloneDeep(panel);
     newPanel.pop();
-    newPanel.unshift(getEmptyLine(config));
+    newPanel.unshift(getEmptyRow(config));
     return newPanel;
   }
 )(CONFIG);
@@ -260,7 +260,7 @@ const scrollDownPanel = (bgPanel, toolPanel) => {
   const newBgPanel = overlap ? assignPanel(bgPanel, toolPanel) : bgPanel;
   const newToolPanel = overlap ? createRandomToolPanel(panelList, newBgPanel) : downPanel(toolPanel);
   return {
-    bgPanel: removeFullLine(newBgPanel),
+    bgPanel: removeFullRow(newBgPanel),
     toolPanel: newToolPanel
   };
 };
@@ -315,22 +315,22 @@ const processKey = R.curry((key, bgPanel, toolPanel) => (
 );
 const isValidKey = (key) => (_.some(keyFnList, (item) => (item.key === key)));
 
-// remove line on panel
+// remove row on panel
 
-function addEmptyLine(panel, config = CONFIG) {
+function addEmptyRow(panel, config = CONFIG) {
   const newPanel = _.cloneDeep(panel);
   const count = config.rows - newPanel.length;
-  const emptyLines = getEmptyLines(count);
-  newPanel.unshift(...emptyLines);
+  const emptyRows = getEmptyRows(count);
+  newPanel.unshift(...emptyRows);
   return newPanel;
 };
 
-const removeFullLine = (panel) => {
+const removeFullRow = (panel) => {
   const newPanel = _.filter(_.cloneDeep(panel), (row) => (
-    !isFullLine(row)
+    !isFullRow(row)
   ));
 
-  return addEmptyLine(newPanel);
+  return addEmptyRow(newPanel);
 };
 
 // components
