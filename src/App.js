@@ -15,16 +15,6 @@ const CONFIG = {
 
 // create panel
 
-/*
- * const addRowColumn = (panel) => (
- *   panel.map((rows, rIndex) => (
- *     rows.map((item, cIndex) => (
- *       Object.assign(item, { row: rIndex, column: cIndex })
- *     ))
- *   ))
- * );
- */
-
 const createItem = (config = CONFIG) => ({ color: config.color });
 const repeatItem = (initData, config = CONFIG) => (
   R.repeat([], config.columns).map(() => (
@@ -265,20 +255,6 @@ const panelList = [
 const getWindow = R.compose(convert1DimAry, assignPanel);
 const getDebugWindow = R.compose(convert1DimAry);
 
-// components
-
-const createBlocks = (ary) => (
-  ary.map(
-    (item, index) => (
-      <Block color={item.color} row={item.row} column={item.column} key={index} />
-    )
-  )
-);
-
-const Block = (props) => (
-  <div className="block" style={{backgroundColor: props.color}}></div>
-);
-const Blocks = (props) => (createBlocks(props.window));
 const createRandomToolPanel = (panelList, bgPanel) => {
   const newPanel = panelList[_.random(0, panelList.length -1)]();
   // const newPanel = _.last(panelList)();
@@ -348,7 +324,20 @@ const processKey = R.curry((key, bgPanel, toolPanel) => (
 );
 const isValidKey = (key) => (_.some(keyFnList, (item) => (item.key === key)));
 
-// UI
+// components
+
+const createBlocks = (ary) => (
+  ary.map(
+    (item, index) => (
+      <Block color={item.color} row={item.row} column={item.column} key={index} />
+    )
+  )
+);
+
+const Block = (props) => (
+  <div className="block" style={{backgroundColor: props.color}}></div>
+);
+const Blocks = (props) => (createBlocks(props.window));
 
 class App extends Component {
   constructor(props) {
