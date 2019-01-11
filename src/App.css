@@ -4,7 +4,7 @@
 
 .App {
   align-items: flex-start;
-  background: grey;
+  background: white;
   display: flex;
   flex-wrap: wrap;
   float: left;
@@ -13,6 +13,9 @@
 }
 
 .App .block {
+  box-sizing: border-box;
   height: 52px;
   width: 50px;
+  border-radius: 3px;
+  border: 1px solid #000;
 }
