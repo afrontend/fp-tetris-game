@@ -5,7 +5,6 @@
 .App {
   align-items: flex-start;
   background: grey;
-  border-right: 1px solid black;
   display: flex;
   flex-wrap: wrap;
   float: left;
