@@ -9,7 +9,7 @@
   flex-wrap: wrap;
   float: left;
   margin: auto;
-  width: 502px;
+  width: calc(50px * 10 + 2px);
 }
 
 .App .block {
