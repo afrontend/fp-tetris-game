@@ -10,7 +10,7 @@
 
 # Install
 
-    git clone https://github.com/afrontend/tetris
+    git clone https://github.com/afrontend/fp-tetris
     cd tetris
     npm install
 
