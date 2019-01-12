@@ -8,7 +8,7 @@ import './App.css';
 
 const CONFIG = {
   rows: 20,
-  columns: 10,
+  columns: 14,
   color: 'grey',
   scrollDownInterval: 700
 };

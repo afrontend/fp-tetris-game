@@ -8,7 +8,7 @@
   display: flex;
   flex-wrap: wrap;
   margin: auto;
-  width: calc(50px * 10 + 2px);
+  width: calc(50px * 14 + 2px);
 }
 
 .App .block {
