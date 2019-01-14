@@ -243,7 +243,6 @@ const panelList = [
   R.compose(paintZ, createEmptyPanel),
 ];
 const getWindow = R.compose(convert1DimAry, assignPanel);
-const getDebugWindow = R.compose(convert1DimAry);
 
 // make tool panel
 
