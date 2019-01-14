@@ -7,11 +7,12 @@
     "url": "git+https://github.com/afrontend/tetris.git"
   },
   "keywords": [
-    "tetris",
+    "game",
     "javascript",
     "lodash",
     "ramda",
-    "react"
+    "react",
+    "tetris"
   ],
   "author": "<frontend.wordpress@gmail.com>",
   "license": "MIT",
