@@ -363,6 +363,7 @@ class App extends Component {
     }, CONFIG.scrollDownInterval);
 
     keyboard.keyPressed(e => {
+      e.preventDefault();
       setTimeout(() => {
         this.setState((state) => {
           return isValidKey(e.which) ? processKey(e.which)(state.bgPanel, state.toolPanel) : {};
