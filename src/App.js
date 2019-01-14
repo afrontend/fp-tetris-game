@@ -363,7 +363,6 @@ class App extends Component {
     }, CONFIG.scrollDownInterval);
 
     keyboard.keyPressed(e => {
-      e.preventDefault();
       setTimeout(() => {
         this.setState((state) => {
           return isValidKey(e.which) ? processKey(e.which)(state.bgPanel, state.toolPanel) : {};
@@ -375,12 +374,6 @@ class App extends Component {
   render() {
     return (
       <div className="container">
-        <div className="App">
-          <Blocks window={getDebugWindow([])} />
-        </div>
-        <div className="App">
-          <Blocks window={getDebugWindow([])} />
-        </div>
         <div className="App">
           <Blocks window={getWindow(this.state.bgPanel, this.state.toolPanel)} />
         </div>
