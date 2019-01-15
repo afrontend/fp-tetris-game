@@ -8,9 +8,10 @@ import './App.css';
 
 const CONFIG = {
   rows: 17,
-  columns: 14,
+  columns: 12,
   color: 'grey',
-  scrollDownInterval: 700
+  scrollDownInterval: 700,
+  count: 0
 };
 
 // create panel
@@ -23,7 +24,7 @@ const repeatItem = (initData, config = CONFIG) => (
 );
 const getEmptyRow = (config = CONFIG) => (repeatItem(() => (createItem(config))));
 const getEmptyRows = (count) => (R.repeat({}, count).map(() => (getEmptyRow())));
-const convert1DimAry = (panel) => (_.flattenDepth(_.cloneDeep(panel)));
+const convert1DimAry = (panel) => (_.flattenDepth(panel));
 const convert2DimAry = (ary) => (_.chunk(ary, CONFIG.columns));
 const createPanel = (config = CONFIG) => {
   return R.repeat({}, config.rows).map(() => (getEmptyRow(config)));
@@ -319,8 +320,10 @@ const isValidKey = (key) => (_.some(keyFnList, (item) => (item.key === key)));
 function addEmptyRow(panel, config = CONFIG) {
   const newPanel = _.cloneDeep(panel);
   const count = config.rows - newPanel.length;
+  CONFIG.count += count;
   const emptyRows = getEmptyRows(count);
   newPanel.unshift(...emptyRows);
+  _.last(_.last(newPanel)).count = CONFIG.count;
   return newPanel;
 };
 
@@ -337,13 +340,15 @@ const removeFullRow = (panel) => {
 const createBlocks = (ary) => (
   ary.map(
     (item, index) => (
-      <Block color={item.color} row={item.row} column={item.column} key={index} />
+      <Block color={item.color} key={index}>
+        {item.count}
+      </Block>
     )
   )
 );
 
 const Block = (props) => (
-  <div className="block" style={{backgroundColor: props.color}}></div>
+  <div className="block" style={{backgroundColor: props.color}}>{props.children}</div>
 );
 const Blocks = (props) => (createBlocks(props.window));
 
