@@ -1,7 +1,8 @@
 {
   "name": "fp-tetris-game",
+  "engines" : { "node" : ">=8.0.0" },
   "version": "0.1.0",
-  "description": "자바스크립트로 만든 테트리스 게임",
+  "description": "자바스크립트로 만든 tetris 게임",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/afrontend/tetris.git"
