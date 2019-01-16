@@ -15,15 +15,20 @@
   border-radius: 3px;
   border: 1px solid #000;
   box-sizing: border-box;
-  height: 52px;
-  width: 50px;
-  text-align: center;
-  line-height: 52px;
   font-size: 1em;
+  font-weight: bold;
+  height: 52px;
+  line-height: 52px;
+  text-align: center;
+  width: 50px;
 }
 
 .logo {
   animation: logo-spin infinite 20s linear;
+}
+
+.count {
+  animation: logo-spin infinite 1s linear;
 }
 
 @keyframes logo-spin {
