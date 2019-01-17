@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
+import fp from 'lodash/fp';
 import * as R from 'ramda';
 import * as keyboard from 'keyboard-handler';
 import './App.css';
@@ -14,45 +15,46 @@ const CONFIG = {
   count: 0
 };
 
-// create panel
+// panel functions
 
-const createItem = (config = CONFIG) => ({ color: config.color });
-const repeatItem = (initData, config = CONFIG) => (
-  R.repeat([], config.columns).map(() => (
+const createItem = () => ({ color: CONFIG.color });
+const repeatItem = (initData) => (
+  R.repeat([], CONFIG.columns).map(() => (
     initData())
   )
 );
-const getEmptyRow = (config = CONFIG) => (repeatItem(() => (createItem(config))));
+const getEmptyRow = () => (repeatItem(() => (createItem())));
 const getEmptyRows = (count) => (R.repeat({}, count).map(() => (getEmptyRow())));
-const convert1DimAry = (panel) => (_.flattenDepth(panel));
-const convert2DimAry = (ary) => (_.chunk(ary, CONFIG.columns));
-const createPanel = (config = CONFIG) => {
-  return R.repeat({}, config.rows).map(() => (getEmptyRow(config)));
+const convert1DimAry = _.flattenDepth;
+const convert2DimAry = fp.chunk(CONFIG.columns)
+const createPanel = () => {
+  return R.repeat({}, CONFIG.rows).map(() => (getEmptyRow()));
 };
 
 // check a panel
 
-const isBlankItem = (item, config = CONFIG) => (item.color === config.color);
-const isBottom = (panel) => (!isBlankRow(_.last(panel)));
-const isBlankRow = (ary) => (_.every(ary, (item) => (isBlankItem(item))));
-const isFullRow = (ary) => (_.every(ary, (item) => (!isBlankItem(item))));
+const isBlank = (item) => (item.color === CONFIG.color);
+const isNotBlank = (item) => (item.color !== CONFIG.color);
+const isBottom = (panel) => (isNotBlankRow(_.last(panel)));
+const isNotBlankRow = fp.some(isNotBlank);
+const isNotFullRow = fp.some(isBlank);
 
 const isOnTheLeftEdge = (panel) => {
   return !!_.reduce(panel, (count, rows) => {
-    return (!isBlankItem(_.first(rows)) ? count + 1 : count);
+    return (isNotBlank(_.first(rows)) ? count + 1 : count);
   }, 0);
 };
 
 const isOnTheRightEdge = (panel) => {
   return !!_.reduce(panel, (count, rows) => {
-    return (!isBlankItem(_.last(rows)) ? count + 1 : count);
+    return (isNotBlank(_.last(rows)) ? count + 1 : count);
   }, 0);
 };
 
 const isOverlap = (bgPanel, toolPanel) => {
   return _.some(
     R.zipWith((bg, tool) => {
-      return (!isBlankItem(bg) && !isBlankItem(tool)) ? true : false;
+      return (isNotBlank(bg) && isNotBlank(tool)) ? true : false;
     }, convert1DimAry(bgPanel), convert1DimAry(toolPanel))
     , (item) => (item === true));
 };
@@ -60,25 +62,22 @@ const isOverlap = (bgPanel, toolPanel) => {
 const assignPanel = (bgPanel, toolPanel) => {
   return convert2DimAry(
     R.zipWith((bg, tool) => {
-      return isBlankItem(tool) ? bg : tool;
+      return isBlank(tool) ? bg : tool;
     }, convert1DimAry(bgPanel), convert1DimAry(toolPanel))
   );
 };
 
 // move panel
 
-const downPanel = R.curry(
-  (config, panel) => {
-    const newPanel = _.cloneDeep(panel);
-    newPanel.pop();
-    newPanel.unshift(getEmptyRow(config));
-    return newPanel;
-  }
-)(CONFIG);
+const downPanel = (panel) => {
+  const newPanel = _.cloneDeep(panel);
+  newPanel.pop();
+  newPanel.unshift(getEmptyRow());
+  return newPanel;
+};
 
 const leftPanel = (panel) => {
-  const newPanel = _.cloneDeep(panel);
-  return newPanel.map((rows) => {
+  return _.cloneDeep(panel).map((rows) => {
     rows.shift();
     rows.push(createItem());
     return rows;
@@ -86,8 +85,7 @@ const leftPanel = (panel) => {
 };
 
 const rightPanel = (panel) => {
-  const newPanel = _.cloneDeep(panel);
-  return newPanel.map((rows) => {
+  return _.cloneDeep(panel).map((rows) => {
     rows.pop();
     rows.unshift(createItem());
     return rows;
@@ -233,15 +231,14 @@ const paintZ = (panel) => {
   ], 'red');
 };
 
-const createEmptyPanel = () => (createPanel());
 const panelList = [
-  R.compose(paintO, createEmptyPanel),
-  R.compose(paintI, createEmptyPanel),
-  R.compose(paintT, createEmptyPanel),
-  R.compose(paintJ, createEmptyPanel),
-  R.compose(paintL, createEmptyPanel),
-  R.compose(paintS, createEmptyPanel),
-  R.compose(paintZ, createEmptyPanel),
+  R.compose(paintO, createPanel),
+  R.compose(paintI, createPanel),
+  R.compose(paintT, createPanel),
+  R.compose(paintJ, createPanel),
+  R.compose(paintL, createPanel),
+  R.compose(paintS, createPanel),
+  R.compose(paintZ, createPanel),
 ];
 const getWindow = R.compose(convert1DimAry, assignPanel);
 
@@ -250,7 +247,7 @@ const getWindow = R.compose(convert1DimAry, assignPanel);
 const createRandomToolPanel = (panelList, bgPanel) => {
   const newPanel = panelList[_.random(0, panelList.length -1)]();
   const overlap = bgPanel ? isOverlap(bgPanel, newPanel) : false;
-  return overlap ? createEmptyPanel() : newPanel;
+  return overlap ? createPanel() : newPanel;
 };
 
 // process event
@@ -285,7 +282,7 @@ const rightKey = (bgPanel, toolPanel) => {
 
 const getColorCount = (panel) => (
   _.reduce(convert1DimAry(panel), (sum, item) => {
-    return (sum + (!isBlankItem(item) ? 1 : 0));
+    return (sum + (isNotBlank(item) ? 1 : 0));
   }, 0)
 );
 
@@ -317,9 +314,9 @@ const isValidKey = (key) => (_.some(keyFnList, (item) => (item.key === key)));
 
 // remove row on panel
 
-function addEmptyRow(panel, config = CONFIG) {
+function addEmptyRow(panel) {
   const newPanel = _.cloneDeep(panel);
-  const count = config.rows - newPanel.length;
+  const count = CONFIG.rows - newPanel.length;
   CONFIG.count += count;
   const emptyRows = getEmptyRows(count);
   newPanel.unshift(...emptyRows);
@@ -329,7 +326,7 @@ function addEmptyRow(panel, config = CONFIG) {
 
 const removeFullRow = (panel) => {
   const newPanel = _.filter(_.cloneDeep(panel), (row) => (
-    !isFullRow(row)
+    isNotFullRow(row)
   ));
 
   return addEmptyRow(newPanel);
@@ -356,7 +353,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      bgPanel: createEmptyPanel(),
+      bgPanel: createPanel(),
       toolPanel: createRandomToolPanel(panelList)
     };
 
