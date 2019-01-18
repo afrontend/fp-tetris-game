@@ -17,19 +17,22 @@ const CONFIG = {
 
 // panel functions
 
+const getAry = (len, fn) => (
+  _.range(len).map(() => (
+    fn
+    ? (
+      _.isFunction(fn)
+      ? fn()
+      : fn )
+    : null)
+  ));
+
 const createItem = () => ({ color: CONFIG.color });
-const repeatItem = (initData) => (
-  R.repeat([], CONFIG.columns).map(() => (
-    initData())
-  )
-);
-const getEmptyRow = () => (repeatItem(() => (createItem())));
-const getEmptyRows = (count) => (R.repeat({}, count).map(() => (getEmptyRow())));
+const getEmptyRow = () => (getAry(CONFIG.columns, createItem));
+const createPanel = () => (getAry(CONFIG.rows, getEmptyRow));
+const getEmptyRows = (count) => (getAry(count, getEmptyRow));
 const convert1DimAry = _.flattenDepth;
 const convert2DimAry = fp.chunk(CONFIG.columns)
-const createPanel = () => {
-  return R.repeat({}, CONFIG.rows).map(() => (getEmptyRow()));
-};
 
 // check a panel
 
