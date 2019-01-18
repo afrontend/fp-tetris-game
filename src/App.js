@@ -317,17 +317,16 @@ const isValidKey = (key) => (_.some(keyFnList, (item) => (item.key === key)));
 
 // remove row on panel
 
-function addEmptyRow(panel) {
+const addEmptyRow = panel => {
   const newPanel = _.cloneDeep(panel);
   const count = CONFIG.rows - newPanel.length;
   CONFIG.count += count;
-  const emptyRows = getEmptyRows(count);
-  newPanel.unshift(...emptyRows);
+  newPanel.unshift(...getEmptyRows(count));
   _.last(_.last(newPanel)).count = CONFIG.count;
   return newPanel;
 };
 
-const removeFullRow = (panel) => {
+const removeFullRow = panel => {
   const newPanel = _.filter(_.cloneDeep(panel), (row) => (
     isNotFullRow(row)
   ));
@@ -337,7 +336,7 @@ const removeFullRow = (panel) => {
 
 // components
 
-const createBlocks = (ary) => (
+const createBlocks = ary => (
   ary.map(
     (item, index) => (
       <Block color={item.color} key={index}>
@@ -347,10 +346,10 @@ const createBlocks = (ary) => (
   )
 );
 
-const Block = (props) => (
+const Block = props => (
   <div className="block" style={{backgroundColor: props.color}}>{props.children}</div>
 );
-const Blocks = (props) => (createBlocks(props.window));
+const Blocks = props => (createBlocks(props.window));
 
 class App extends Component {
   constructor(props) {
@@ -369,7 +368,9 @@ class App extends Component {
     keyboard.keyPressed(e => {
       setTimeout(() => {
         this.setState((state) => {
-          return isValidKey(e.which) ? processKey(e.which)(state.bgPanel, state.toolPanel) : {};
+          return isValidKey(e.which)
+            ? processKey(e.which)(state.bgPanel, state.toolPanel)
+            : {};
         });
       });
     });
