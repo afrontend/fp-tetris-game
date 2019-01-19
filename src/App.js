@@ -248,9 +248,9 @@ const getWindow = R.compose(convert1DimAry, assignPanel);
 // make tool panel
 
 const createRandomToolPanel = (panelList, bgPanel) => {
-  const newPanel = panelList[_.random(0, panelList.length -1)]();
-  const overlap = bgPanel ? isOverlap(bgPanel, newPanel) : false;
-  return overlap ? createPanel() : newPanel;
+  const toolPanel = panelList[_.random(0, panelList.length -1)]();
+  const overlap = bgPanel ? isOverlap(bgPanel, toolPanel) : false;
+  return overlap ? createPanel() : toolPanel;
 };
 
 // process event
