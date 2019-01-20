@@ -5,7 +5,7 @@
   "description": "자바스크립트로 만든 tetris 게임",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/afrontend/tetris.git"
+    "url": "git+https://github.com/afrontend/fp-tetris-game.git"
   },
   "homepage" : "https://afrontend.github.io/game/fp-tetris-game",
   "keywords": [
@@ -19,7 +19,7 @@
   "author": "<frontend.wordpress@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/afrontend/tetris/issues"
+    "url": "https://github.com/afrontend/fp-tetris-game/issues"
   },
   "private": true,
   "dependencies": {
