@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 import fp from 'lodash/fp';
-import * as R from 'ramda';
 import * as keyboard from 'keyboard-handler';
 import './App.css';
 
@@ -54,19 +53,23 @@ const isOnTheRightEdge = (panel) => {
   }, 0);
 };
 
+const isOverlapItem = (bg, tool) => ((isNotBlank(bg) && isNotBlank(tool)) ? true : false);
 const isOverlap = (bgPanel, toolPanel) => {
   return _.some(
-    R.zipWith((bg, tool) => {
-      return (isNotBlank(bg) && isNotBlank(tool)) ? true : false;
-    }, convert1DimAry(bgPanel), convert1DimAry(toolPanel))
-    , (item) => (item === true));
+    _.zipWith(
+      convert1DimAry(bgPanel),
+      convert1DimAry(toolPanel),
+      isOverlapItem),
+    fp.isEqual(true));
 };
 
+const zipPanelItem = (bg, tool) => (isBlank(tool) ? bg : tool);
 const assignPanel = (bgPanel, toolPanel) => {
   return convert2DimAry(
-    R.zipWith((bg, tool) => {
-      return isBlank(tool) ? bg : tool;
-    }, convert1DimAry(bgPanel), convert1DimAry(toolPanel))
+    _.zipWith(
+      convert1DimAry(bgPanel),
+      convert1DimAry(toolPanel),
+      zipPanelItem)
   );
 };
 
@@ -235,15 +238,15 @@ const paintZ = (panel) => {
 };
 
 const panelList = [
-  R.compose(paintO, createPanel),
-  R.compose(paintI, createPanel),
-  R.compose(paintT, createPanel),
-  R.compose(paintJ, createPanel),
-  R.compose(paintL, createPanel),
-  R.compose(paintS, createPanel),
-  R.compose(paintZ, createPanel),
+  _.flow([createPanel, paintO]),
+  _.flow([createPanel, paintI]),
+  _.flow([createPanel, paintT]),
+  _.flow([createPanel, paintJ]),
+  _.flow([createPanel, paintL]),
+  _.flow([createPanel, paintS]),
+  _.flow([createPanel, paintZ])
 ];
-const getWindow = R.compose(convert1DimAry, assignPanel);
+const getWindow = _.flow([assignPanel, convert1DimAry]);
 
 // make tool panel
 
@@ -308,11 +311,12 @@ const keyFnList = [
   { key: 40, fn: scrollDownPanel }
 ];
 
-const processKey = R.curry((key, bgPanel, toolPanel) => (
+const processKey = (key, bgPanel, toolPanel) => (
   _.find(keyFnList, (item) => (
     item.key === key
-  )).fn(bgPanel, toolPanel))
+  )).fn(bgPanel, toolPanel)
 );
+
 const isValidKey = (key) => (_.some(keyFnList, (item) => (item.key === key)));
 
 // remove row on panel
@@ -369,7 +373,7 @@ class App extends Component {
       setTimeout(() => {
         this.setState((state) => {
           return isValidKey(e.which)
-            ? processKey(e.which)(state.bgPanel, state.toolPanel)
+            ? processKey(e.which, state.bgPanel, state.toolPanel)
             : {};
         });
       });

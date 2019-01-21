@@ -1,18 +1,19 @@
 {
   "name": "fp-tetris-game",
-  "engines" : { "node" : ">=8.0.0" },
+  "engines": {
+    "node": ">=8.0.0"
+  },
   "version": "0.1.0",
   "description": "자바스크립트로 만든 tetris 게임",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/afrontend/fp-tetris-game.git"
   },
-  "homepage" : "https://afrontend.github.io/game/fp-tetris-game",
+  "homepage": "https://afrontend.github.io/game/fp-tetris-game",
   "keywords": [
     "game",
     "javascript",
     "lodash",
-    "ramda",
     "react",
     "tetris"
   ],
@@ -25,7 +26,6 @@
   "dependencies": {
     "keyboard-handler": "^2.0.0",
     "lodash": "^4.17.11",
-    "ramda": "^0.26.1",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
     "react-scripts": "2.1.2"

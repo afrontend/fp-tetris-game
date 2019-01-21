@@ -7,7 +7,6 @@
 * [create react app](https://github.com/facebook/create-react-app)
 * [keyboard-handler](https://github.com/emiljohansson/keyboard-handler)
 * [lodash](https://lodash.com/)
-* [ramda](https://ramdajs.com/)
 * [react](https://reactjs.org/)
 
 # Install
