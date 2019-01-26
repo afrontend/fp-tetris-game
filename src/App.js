@@ -64,7 +64,7 @@ const isOverlap = (bgPanel, toolPanel) => {
 };
 
 const zipPanelItem = (bg, tool) => (isBlank(tool) ? bg : tool);
-const assignPanel = (bgPanel, toolPanel) => {
+const assignPanel = ({ bgPanel, toolPanel }) => {
   return convert2DimAry(
     _.zipWith(
       convert1DimAry(bgPanel),
@@ -258,9 +258,9 @@ const createRandomToolPanel = (panelList, bgPanel) => {
 
 // process event
 
-const scrollDownPanel = (bgPanel, toolPanel) => {
+const scrollDownPanel = ({ bgPanel, toolPanel }) => {
   const overlap = isBottom(toolPanel) || isOverlap(bgPanel, downPanel(toolPanel));
-  const newBgPanel = overlap ? assignPanel(bgPanel, toolPanel) : bgPanel;
+  const newBgPanel = overlap ? assignPanel({ bgPanel, toolPanel }) : bgPanel;
   const newToolPanel = overlap ? createRandomToolPanel(panelList, newBgPanel) : downPanel(toolPanel);
   return {
     bgPanel: removeFullRow(newBgPanel),
@@ -268,7 +268,7 @@ const scrollDownPanel = (bgPanel, toolPanel) => {
   };
 };
 
-const leftKey = (bgPanel, toolPanel) => {
+const leftKey = ({ bgPanel, toolPanel }) => {
   const overlap = isOnTheLeftEdge(toolPanel) || isOverlap(bgPanel, leftPanel(toolPanel));
   // console.log("overlap left,", overlap);
   return {
@@ -277,7 +277,7 @@ const leftKey = (bgPanel, toolPanel) => {
   };
 };
 
-const rightKey = (bgPanel, toolPanel) => {
+const rightKey = ({ bgPanel, toolPanel }) => {
   const overlap = isOnTheRightEdge(toolPanel) || isOverlap(bgPanel, rightPanel(toolPanel));
   // console.log("overlap right,", overlap);
   return {
@@ -292,7 +292,7 @@ const getColorCount = (panel) => (
   }, 0)
 );
 
-const upKey = (bgPanel, toolPanel) => {
+const upKey = ({ bgPanel, toolPanel }) => {
   const rotatedToolPanel = rotatePanel(toolPanel);
   const overlap = getColorCount(toolPanel) !== getColorCount(rotatedToolPanel) || isOverlap(bgPanel, rotatedToolPanel);
   console.log("overlap rotate,", overlap);
@@ -311,10 +311,10 @@ const keyFnList = [
   { key: 40, fn: scrollDownPanel }
 ];
 
-const processKey = (key, bgPanel, toolPanel) => (
+const processKey = (key, panels) => (
   _.find(keyFnList, (item) => (
     item.key === key
-  )).fn(bgPanel, toolPanel)
+  )).fn(panels)
 );
 
 const isValidKey = (key) => (_.some(keyFnList, (item) => (item.key === key)));
@@ -365,7 +365,10 @@ class App extends Component {
 
     this.state.timer = setInterval(() => {
       this.setState((state) => {
-        return scrollDownPanel(state.bgPanel, state.toolPanel);
+        return scrollDownPanel({
+          bgPanel: state.bgPanel,
+          toolPanel: state.toolPanel
+        });
       });
     }, CONFIG.scrollDownInterval);
 
@@ -373,7 +376,10 @@ class App extends Component {
       setTimeout(() => {
         this.setState((state) => {
           return isValidKey(e.which)
-            ? processKey(e.which, state.bgPanel, state.toolPanel)
+            ? processKey(e.which, {
+              bgPanel: state.bgPanel,
+              toolPanel: state.toolPanel
+            })
             : {};
         });
       });
@@ -384,7 +390,10 @@ class App extends Component {
     return (
       <div className="container">
         <div className="App">
-          <Blocks window={getWindow(this.state.bgPanel, this.state.toolPanel)} />
+          <Blocks window={getWindow({
+            bgPanel: this.state.bgPanel,
+            toolPanel: this.state.toolPanel
+          })} />
         </div>
       </div>
     );
