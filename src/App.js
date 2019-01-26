@@ -11,7 +11,8 @@ const CONFIG = {
   columns: 12,
   color: 'grey',
   scrollDownInterval: 700,
-  count: 0
+  count: 0,
+  pause: false
 };
 
 // panel functions
@@ -72,6 +73,10 @@ const assignPanel = ({ bgPanel, toolPanel }) => {
       zipPanelItem)
   );
 };
+
+// pause panel
+
+const isPaused = () => (CONFIG.pause === true);
 
 // move panel
 
@@ -257,14 +262,18 @@ const createRandomToolPanel = (panelList, bgPanel) => {
 };
 
 // process event
+//
+const getColorCount = (panel) => (
+  _.reduce(convert1DimAry(panel), (sum, item) => {
+    return (sum + (isNotBlank(item) ? 1 : 0));
+  }, 0)
+);
 
-const scrollDownPanel = ({ bgPanel, toolPanel }) => {
-  const overlap = isBottom(toolPanel) || isOverlap(bgPanel, downPanel(toolPanel));
-  const newBgPanel = overlap ? assignPanel({ bgPanel, toolPanel }) : bgPanel;
-  const newToolPanel = overlap ? createRandomToolPanel(panelList, newBgPanel) : downPanel(toolPanel);
+const spaceKey = ({ bgPanel, toolPanel }) => {
+  CONFIG.pause = CONFIG.pause === true ? false : true;
   return {
-    bgPanel: removeFullRow(newBgPanel),
-    toolPanel: newToolPanel
+    bgPanel,
+    toolPanel
   };
 };
 
@@ -277,21 +286,6 @@ const leftKey = ({ bgPanel, toolPanel }) => {
   };
 };
 
-const rightKey = ({ bgPanel, toolPanel }) => {
-  const overlap = isOnTheRightEdge(toolPanel) || isOverlap(bgPanel, rightPanel(toolPanel));
-  // console.log("overlap right,", overlap);
-  return {
-    bgPanel,
-    toolPanel: overlap ? toolPanel : rightPanel(toolPanel)
-  };
-};
-
-const getColorCount = (panel) => (
-  _.reduce(convert1DimAry(panel), (sum, item) => {
-    return (sum + (isNotBlank(item) ? 1 : 0));
-  }, 0)
-);
-
 const upKey = ({ bgPanel, toolPanel }) => {
   const rotatedToolPanel = rotatePanel(toolPanel);
   const overlap = getColorCount(toolPanel) !== getColorCount(rotatedToolPanel) || isOverlap(bgPanel, rotatedToolPanel);
@@ -302,12 +296,35 @@ const upKey = ({ bgPanel, toolPanel }) => {
   };
 };
 
+const rightKey = ({ bgPanel, toolPanel }) => {
+  const overlap = isOnTheRightEdge(toolPanel) || isOverlap(bgPanel, rightPanel(toolPanel));
+  // console.log("overlap right,", overlap);
+  return {
+    bgPanel,
+    toolPanel: overlap ? toolPanel : rightPanel(toolPanel)
+  };
+};
+
+const downKey = ({ bgPanel, toolPanel }) => {
+  const overlap = isBottom(toolPanel) || isOverlap(bgPanel, downPanel(toolPanel));
+  const newBgPanel = overlap ? assignPanel({ bgPanel, toolPanel }) : bgPanel;
+  const newToolPanel = overlap ? createRandomToolPanel(panelList, newBgPanel) : downPanel(toolPanel);
+  return {
+    bgPanel: removeFullRow(newBgPanel),
+    toolPanel: newToolPanel
+  };
+};
+
+const withPauseKey = fn => panels => (isPaused() ? panels : fn(panels));
+const scrollDownPanel = withPauseKey(downKey);
+
 // key definition
 
 const keyFnList = [
-  { key: 37, fn: leftKey },
-  { key: 38, fn: upKey },
-  { key: 39, fn: rightKey },
+  { key: 32, fn: spaceKey },
+  { key: 37, fn: withPauseKey(leftKey) },
+  { key: 38, fn: withPauseKey(upKey) },
+  { key: 39, fn: withPauseKey(rightKey) },
   { key: 40, fn: scrollDownPanel }
 ];
 
