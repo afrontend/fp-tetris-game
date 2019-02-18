@@ -8,7 +8,6 @@ export const CONFIG = {
   rows: 17,
   columns: 12,
   color: 'grey',
-  scrollDownInterval: 700,
   count: 0,
   pause: false
 };
@@ -345,12 +344,10 @@ const keyFnList = [
   { key: 40, fn: scrollDownPanel }
 ];
 
-export const processKey = (key, panels) => (
-  _.find(keyFnList, (item) => (
-    item.key === key
-  )).fn(panels)
-);
+const isValidKey = (key) => (_.some(keyFnList, (item) => (item.key === key)));
 
-export const isValidKey = (key) => (_.some(keyFnList, (item) => (item.key === key)));
+export const processKey = (key, panels) => (
+  isValidKey(key) ? _.find(keyFnList, (item) => (item.key === key)).fn(panels) : {}
+);
 
 export default {};

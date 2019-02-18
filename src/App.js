@@ -7,7 +7,14 @@ https://github.com/afrontend/fp-tetris-game
 import React, { Component } from 'react';
 import * as keyboard from 'keyboard-handler';
 import './App.css';
-import { CONFIG, processKey, isValidKey, scrollDownPanel, createPanel, getWindow, createRandomToolPanel } from './fp-tetris';
+import {
+  CONFIG,
+  processKey,
+  scrollDownPanel,
+  createPanel,
+  getWindow,
+  createRandomToolPanel
+} from './fp-tetris';
 
 // components
 
@@ -21,9 +28,7 @@ const createBlocks = ary => (
   )
 );
 
-const Block = props => (
-  <div className="block" style={{backgroundColor: props.color}}>{props.children}</div>
-);
+const Block = props => (<div className="block" style={{backgroundColor: props.color}}>{props.children}</div>);
 const Blocks = props => (createBlocks(props.window));
 
 class App extends Component {
@@ -41,17 +46,15 @@ class App extends Component {
           toolPanel: state.toolPanel
         });
       });
-    }, CONFIG.scrollDownInterval);
+    }, 700);
 
     keyboard.keyPressed(e => {
       setTimeout(() => {
         this.setState((state) => {
-          return isValidKey(e.which)
-            ? processKey(e.which, {
-              bgPanel: state.bgPanel,
-              toolPanel: state.toolPanel
-            })
-            : {};
+          return processKey(e.which, {
+            bgPanel: state.bgPanel,
+            toolPanel: state.toolPanel
+          })
         });
       });
     });
