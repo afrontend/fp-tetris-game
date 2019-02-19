@@ -8,15 +8,11 @@ import React, { Component } from 'react';
 import * as keyboard from 'keyboard-handler';
 import './App.css';
 import {
-  CONFIG,
-  processKey,
-  scrollDownPanel,
-  createPanel,
-  getWindow,
-  createRandomToolPanel
+  initTetrisTable,
+  downTetrisTable,
+  keyTetrisTable,
+  joinTetrisTable
 } from './fp-tetris';
-
-// components
 
 const createBlocks = ary => (
   ary.map(
@@ -34,28 +30,14 @@ const Blocks = props => (createBlocks(props.window));
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      bgPanel: createPanel(),
-      toolPanel: createRandomToolPanel()
-    };
-
+    this.state = initTetrisTable();
     this.state.timer = setInterval(() => {
-      this.setState((state) => {
-        return scrollDownPanel({
-          bgPanel: state.bgPanel,
-          toolPanel: state.toolPanel
-        });
-      });
+      this.setState((state) => (downTetrisTable(state)));
     }, 700);
 
     keyboard.keyPressed(e => {
       setTimeout(() => {
-        this.setState((state) => {
-          return processKey(e.which, {
-            bgPanel: state.bgPanel,
-            toolPanel: state.toolPanel
-          })
-        });
+        this.setState((state) => (keyTetrisTable(e.which, state)));
       });
     });
   }
@@ -64,10 +46,7 @@ class App extends Component {
     return (
       <div className="container">
         <div className="App">
-          <Blocks window={getWindow({
-            bgPanel: this.state.bgPanel,
-            toolPanel: this.state.toolPanel
-          })} />
+          <Blocks window={joinTetrisTable(this.state)} />
         </div>
       </div>
     );

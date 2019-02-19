@@ -4,7 +4,7 @@ import './App.css';
 
 // configuration
 
-export const CONFIG = {
+const CONFIG = {
   rows: 17,
   columns: 12,
   color: 'grey',
@@ -26,7 +26,7 @@ const getAry = (len, fn) => (
 
 const createItem = () => ({ color: CONFIG.color });
 const getEmptyRow = () => (getAry(CONFIG.columns, createItem));
-export const createPanel = () => (getAry(CONFIG.rows, getEmptyRow));
+const createPanel = () => (getAry(CONFIG.rows, getEmptyRow));
 const getEmptyRows = (count) => (getAry(count, getEmptyRow));
 const convert1DimAry = _.flattenDepth;
 const convert2DimAry = fp.chunk(CONFIG.columns)
@@ -267,11 +267,11 @@ const panelList = [
   _.flow([createPanel, paintS]),
   _.flow([createPanel, paintZ])
 ];
-export const getWindow = _.flow([assignPanel, convert1DimAry]);
+const getWindow = _.flow([assignPanel, convert1DimAry]);
 
 // make tool panel
 
-export const createRandomToolPanel = (bgPanel) => {
+const createRandomToolPanel = (bgPanel) => {
   const toolPanel = panelList[_.random(0, panelList.length -1)]();
   const overlap = bgPanel ? isOverlap(bgPanel, toolPanel) : false;
   return overlap ? createPanel() : toolPanel;
@@ -334,7 +334,7 @@ const downKey = ({ bgPanel, toolPanel }) => {
 // key definition
 
 const withPauseKey = fn => panels => (isPaused() ? panels : fn(panels));
-export const scrollDownPanel = withPauseKey(downKey);
+const scrollDownPanel = withPauseKey(downKey);
 
 const keyFnList = [
   { key: 32, fn: spaceKey },
@@ -346,8 +346,22 @@ const keyFnList = [
 
 const isValidKey = (key) => (_.some(keyFnList, (item) => (item.key === key)));
 
-export const processKey = (key, panels) => (
-  isValidKey(key) ? _.find(keyFnList, (item) => (item.key === key)).fn(panels) : {}
+export const initTetrisTable = () => ({
+  bgPanel: createPanel(),
+  toolPanel: createRandomToolPanel()
+});
+
+export const downTetrisTable = ({ bgPanel, toolPanel }) => (
+  scrollDownPanel({
+    bgPanel,
+    toolPanel
+  })
 );
+
+export const keyTetrisTable = (key, state) => (
+  isValidKey(key) ? _.find(keyFnList, (item) => (item.key === key)).fn({ bgPanel: state.bgPanel, toolPanel: state.toolPanel }) : {}
+);
+
+export const joinTetrisTable = (state) => (getWindow({ bgPanel: state.bgPanel, toolPanel: state.toolPanel }))
 
 export default {};
