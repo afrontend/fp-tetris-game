@@ -1,3 +1,9 @@
+/*
+JavaScript Tetris
+By Bob Hwang
+https://github.com/afrontend/fp-tetris-game
+*/
+
 import _ from 'lodash';
 import fp from 'lodash/fp';
 import './App.css';
