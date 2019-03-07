@@ -9,13 +9,14 @@
 * [lodash](https://lodash.com/)
 * [react](https://reactjs.org/)
 
-# Install
+# Installation
+
 
     git clone https://github.com/afrontend/fp-tetris-game
     cd fp-tetris-game
     npm install
 
-# Run
+# Usage
 
     npm start
 
