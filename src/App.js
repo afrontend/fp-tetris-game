@@ -12,7 +12,8 @@ import {
   downTetrisTable,
   keyTetrisTable,
   joinTetrisTable
-} from './fp-tetris';
+} from 'fp-tetris';
+import _ from 'lodash';
 
 const createBlocks = ary => (
   ary.map(
@@ -27,6 +28,19 @@ const createBlocks = ary => (
 const Block = props => (<div className="block" style={{backgroundColor: props.color}}>{props.children}</div>);
 const Blocks = props => (createBlocks(props.window));
 
+const keyList = [
+  { keyValue: 32, keySymbol: 'space'},
+  { keyValue: 37, keySymbol: 'left' },
+  { keyValue: 38, keySymbol: 'up' },
+  { keyValue: 39, keySymbol: 'right' },
+  { keyValue: 40, keySymbol: 'down' }
+];
+
+const getKeySymbol = (keyValue) => {
+  const found = _.find(keyList, key => (key.keyValue === keyValue));
+  return found ? found.keySymbol : null;
+}
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -37,7 +51,10 @@ class App extends Component {
 
     keyboard.keyPressed(e => {
       setTimeout(() => {
-        this.setState((state) => (keyTetrisTable(e.which, state)));
+        this.setState((state) => {
+          const symbol = getKeySymbol(e.which);
+          return symbol ? keyTetrisTable(symbol, state) : state;
+        });
       });
     });
   }
@@ -46,7 +63,7 @@ class App extends Component {
     return (
       <div className="container">
         <div className="App">
-          <Blocks window={joinTetrisTable(this.state)} />
+          <Blocks window={_.flatten(joinTetrisTable(this.state))} />
         </div>
       </div>
     );
