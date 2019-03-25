@@ -13,9 +13,8 @@
   "keywords": [
     "game",
     "javascript",
-    "lodash",
-    "react",
-    "tetris"
+    "tetris",
+    "game"
   ],
   "author": "<frontend.wordpress@gmail.com>",
   "license": "MIT",
