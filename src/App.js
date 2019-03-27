@@ -7,12 +7,7 @@ https://github.com/afrontend/fp-tetris-game
 import React, { Component } from 'react';
 import * as keyboard from 'keyboard-handler';
 import './App.css';
-import {
-  initTetrisTable,
-  downTetrisTable,
-  keyTetrisTable,
-  joinTetrisTable
-} from 'fp-tetris';
+import fpTetris from 'fp-tetris';
 import _ from 'lodash';
 
 const createBlocks = ary => (
@@ -44,16 +39,16 @@ const getKeySymbol = (keyValue) => {
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = initTetrisTable();
+    this.state = fpTetris.init();
     this.state.timer = setInterval(() => {
-      this.setState((state) => (downTetrisTable(state)));
+      this.setState(state => fpTetris.tick(state));
     }, 700);
 
     keyboard.keyPressed(e => {
       setTimeout(() => {
-        this.setState((state) => {
+        this.setState(state => {
           const symbol = getKeySymbol(e.which);
-          return symbol ? keyTetrisTable(symbol, state) : state;
+          return symbol ? fpTetris.key(symbol, state) : state;
         });
       });
     });
@@ -63,7 +58,7 @@ class App extends Component {
     return (
       <div className="container">
         <div className="App">
-          <Blocks window={_.flatten(joinTetrisTable(this.state))} />
+          <Blocks window={_.flatten(fpTetris.join(this.state))} />
         </div>
       </div>
     );

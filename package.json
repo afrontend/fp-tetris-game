@@ -23,11 +23,11 @@
   },
   "private": true,
   "dependencies": {
-    "fp-tetris": "0.0.4",
+    "fp-tetris": "0.0.8",
     "keyboard-handler": "^2.0.0",
     "lodash": "^4.17.11",
-    "react": "^16.7.0",
-    "react-dom": "^16.7.0",
+    "react": "^16.8.5",
+    "react-dom": "^16.8.5",
     "react-scripts": "2.1.2"
   },
   "scripts": {
