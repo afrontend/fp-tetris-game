@@ -25,6 +25,37 @@ const createBlocks = ary => (
   )
 );
 
+function getArgs(qs) {
+  var args = {};
+  var a = '';
+  var prop;
+  var val;
+  var arg;
+
+  try {
+    if (qs === undefined) {
+      a = window.location.search.split('?')[1].split('&');
+    } else {
+      a = qs.split('?')[1].split('#')[0].split('&');
+    }
+
+    for (prop in a) {
+      if (a.hasOwnProperty(prop)) {
+        console.log("prop: " + prop + " value: " + a[prop]);
+        val = a[prop];
+        arg = val.split('=');
+        args[arg[0]] = arg[1];
+      }
+    }
+  } catch (e) {
+    console.log('Error getArgs window.location.search('+window.location.search+')');
+  }
+  console.log(JSON.stringify(args));
+  return args;
+}
+
+const args = getArgs();
+
 const Block = props => (<div className="block" style={{backgroundColor: props.color}}>{props.children}</div>);
 const Blocks = props => (createBlocks(props.window));
 
@@ -60,13 +91,33 @@ class App extends Component {
   }
 
   render() {
-    return (
-      <div className="container">
-        <div className="App">
-          <Blocks window={_.flatten(fpTetris.join(this.state))} />
+    return args.debug
+      ? (
+        <div style={{columns: '400px 3'}}>
+          <div className="container">
+            <div className="App">
+              <Blocks window={_.flatten(this.state.bgPanel)} />
+            </div>
+          </div>
+          <div className="container">
+            <div className="App">
+              <Blocks window={_.flatten(this.state.toolPanel)} />
+            </div>
+          </div>
+          <div className="container">
+            <div className="App">
+              <Blocks window={_.flatten(fpTetris.join(this.state))} />
+            </div>
+          </div>
         </div>
-      </div>
-    );
+      )
+      : (
+        <div className="container">
+          <div className="App">
+            <Blocks window={_.flatten(fpTetris.join(this.state))} />
+          </div>
+        </div>
+      );
   }
 }
 
