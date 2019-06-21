@@ -23,4 +23,4 @@
 
 # Web
 
-https://www.npmjs.com/package/fp-tetris
+https://afrontend.github.io/game/fp-tetris-game/
