@@ -25,7 +25,7 @@ const createBlocks = ary => (
   )
 );
 
-function getArgs(qs) {
+const getArgs = qs => {
   var args = {};
   var a = '';
   var prop;
@@ -75,7 +75,7 @@ const getKeySymbol = (keyValue) => {
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = fpTetris.init();
+    this.state = fpTetris.init({ rows: 17, columns: 12 });
     this.state.timer = setInterval(() => {
       this.setState(state => fpTetris.tick(state));
     }, 700);
@@ -96,12 +96,12 @@ class App extends Component {
         <div style={{columns: '400px 3'}}>
           <div className="container">
             <div className="App">
-              <Blocks window={_.flatten(this.state.bgPanel)} />
+              <Blocks window={_.flatten(fpTetris.toArray(this.state)[0])} />
             </div>
           </div>
           <div className="container">
             <div className="App">
-              <Blocks window={_.flatten(this.state.toolPanel)} />
+              <Blocks window={_.flatten(fpTetris.toArray(this.state)[1])} />
             </div>
           </div>
           <div className="container">
