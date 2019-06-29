@@ -1,5 +1,5 @@
 # Tetris Game
-> 자바스크립트로 만든 테트리스 게임이다.
+> 자바스크립트로 만든 테트리스 게임
 
 [![tetris game screenshot](https://agvim.files.wordpress.com/2019/01/fp-tetris-game.png?w=100 "tetris game screenshot")](https://afrontend.github.io/game/fp-tetris-game/)
 

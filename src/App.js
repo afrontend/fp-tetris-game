@@ -1,8 +1,3 @@
-/*
-JavaScript Tetris
-By Bob Hwang
-https://github.com/afrontend/fp-tetris-game
-*/
 import * as keyboard from 'keyboard-handler';
 import React, { Component } from 'react';
 import _ from 'lodash';
