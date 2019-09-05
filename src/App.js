@@ -9,6 +9,8 @@ const LEFT = 37;
 const UP = 38;
 const RIGHT = 39;
 const DOWN = 40;
+const SKey = 83;
+const RKey = 82;
 
 const createBlocks = ary => (
   ary.map(
@@ -59,10 +61,12 @@ const keyList = [
   { keyValue: LEFT, keySymbol: 'left' },
   { keyValue: UP, keySymbol: 'up' },
   { keyValue: RIGHT, keySymbol: 'right' },
-  { keyValue: DOWN, keySymbol: 'down' }
+  { keyValue: DOWN, keySymbol: 'down' },
+  { keyValue: SKey, keySymbol: 'save' },
+  { keyValue: RKey, keySymbol: 'reload' }
 ];
 
-const getKeySymbol = (keyValue) => {
+const getKeySymbol = keyValue => {
   const found = _.find(keyList, key => (key.keyValue === keyValue));
   return found ? found.keySymbol : null;
 }
@@ -70,6 +74,7 @@ const getKeySymbol = (keyValue) => {
 class App extends Component {
   constructor(props) {
     super(props);
+    this.savedState = null;
     this.state = fpTetris.init({ rows: 17, columns: 12 });
     this.state.timer = setInterval(() => {
       this.setState(state => fpTetris.tick(state));
@@ -79,7 +84,16 @@ class App extends Component {
       setTimeout(() => {
         this.setState(state => {
           const symbol = getKeySymbol(e.which);
-          return symbol ? fpTetris.key(symbol, state) : state;
+          if (symbol === 'save') {
+            console.log('save');
+            this.savedState = _.cloneDeep(state);
+            return state;
+          } else if (symbol === 'reload') {
+            console.log('reload');
+            return this.savedState ? this.savedState : state;
+          } else {
+            return symbol ? fpTetris.key(symbol, state) : state;
+          }
         });
       });
     });
