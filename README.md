@@ -23,4 +23,4 @@
 
 # Web
 
-https://afrontend.github.io/game/fp-tetris-game/
+https://afrontend.github.io/fp-tetris-game/
