@@ -1,8 +1,5 @@
 {
   "name": "fp-tetris-game",
-  "engines": {
-    "node": ">=8.0.0"
-  },
   "version": "0.1.1",
   "description": "자바스크립트로 만든 tetris 게임",
   "repository": {
@@ -25,9 +22,13 @@
     "fp-tetris": "0.0.11",
     "keyboard-handler": "^2.0.0",
     "lodash": "^4.17.15",
-    "react": "^16.12.0",
-    "react-dom": "^16.12.0",
-    "react-scripts": "2.1.2"
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.3.0",
+    "@testing-library/user-event": "^13.5.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "5.0.1",
+    "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -38,14 +39,23 @@
     "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
   },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ],
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
   "devDependencies": {
     "gh-pages": "^2.2.0"
   }
