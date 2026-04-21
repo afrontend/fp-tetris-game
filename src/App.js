@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import _ from 'lodash';
 import './App.css';
 import fpTetris from 'fp-tetris';
+import getArgs from './utils/getArgs';
 
 const SPACE = 32;
 const LEFT = 37;
@@ -21,35 +22,6 @@ const createBlocks = ary => (
     )
   )
 );
-
-const getArgs = qs => {
-  var args = {};
-  var a = '';
-  var prop;
-  var val;
-  var arg;
-
-  try {
-    if (qs === undefined) {
-      a = window.location.search.split('?')[1].split('&');
-    } else {
-      a = qs.split('?')[1].split('#')[0].split('&');
-    }
-
-    for (prop in a) {
-      if (a.hasOwnProperty(prop)) {
-        console.log("prop: " + prop + " value: " + a[prop]);
-        val = a[prop];
-        arg = val.split('=');
-        args[arg[0]] = arg[1];
-      }
-    }
-  } catch (e) {
-    console.log('Error getArgs window.location.search('+window.location.search+')');
-  }
-  console.log(JSON.stringify(args));
-  return args;
-}
 
 const args = getArgs();
 
@@ -85,11 +57,9 @@ class App extends Component {
         this.setState(state => {
           const symbol = getKeySymbol(e.which);
           if (symbol === 'save') {
-            console.log('save');
             this.savedState = _.cloneDeep(state);
             return state;
           } else if (symbol === 'reload') {
-            console.log('reload');
             return this.savedState ? this.savedState : state;
           } else {
             return symbol ? fpTetris.key(symbol, state) : state;
@@ -97,6 +67,10 @@ class App extends Component {
         });
       });
     });
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.state.timer);
   }
 
   render() {
