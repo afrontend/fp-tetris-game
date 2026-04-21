@@ -9,7 +9,7 @@
 * [create react app](https://github.com/facebook/create-react-app)
 * [keyboard-handler](https://github.com/emiljohansson/keyboard-handler)
 * [lodash](https://lodash.com/)
-* [react](https://reactjs.org/)
+* [react](https://react.dev/)
 
 # Installation
 
@@ -20,6 +20,14 @@
 # Run
 
     npm start
+
+# Test
+
+    npm test
+
+# Deploy
+
+    npm run deploy
 
 # Web
 
