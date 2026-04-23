@@ -23,15 +23,31 @@
   width: 4vh;
 }
 
-.logo {
-  animation: logo-spin infinite 20s linear;
+.debug-layout {
+  columns: 400px 3;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+@media (prefers-reduced-motion: no-preference) {
+  .logo {
+    animation: logo-spin infinite 20s linear;
   }
-  to {
-    transform: rotate(360deg);
+
+  @keyframes logo-spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .App {
+    background: #1a1a1a;
+  }
+
+  .App .block {
+    border-color: #444;
   }
 }

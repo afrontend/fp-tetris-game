@@ -76,19 +76,19 @@ function App() {
 
   return args.debug
     ? (
-      <div style={{columns: '400px 3'}}>
+      <div className="debug-layout">
         <div className="container">
-          <div className="App">
+          <div className="App" role="application" aria-label="Tetris debug: board">
             <Blocks window={flatten(fpTetris.toArray(state)[0])} />
           </div>
         </div>
         <div className="container">
-          <div className="App">
+          <div className="App" role="application" aria-label="Tetris debug: piece">
             <Blocks window={flatten(fpTetris.toArray(state)[1])} />
           </div>
         </div>
         <div className="container">
-          <div className="App">
+          <div className="App" role="application" aria-label="Tetris debug: combined">
             <Blocks window={flatten(fpTetris.join(state))} />
           </div>
         </div>
@@ -96,7 +96,7 @@ function App() {
     )
     : (
       <div className="container">
-        <div className="App">
+        <div className="App" role="application" aria-label="Tetris" tabIndex={0}>
           <Blocks window={flatten(fpTetris.join(state))} />
         </div>
       </div>
