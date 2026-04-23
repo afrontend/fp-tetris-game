@@ -1,6 +1,7 @@
 import * as keyboard from 'keyboard-handler';
 import React, { useState, useEffect, useRef } from 'react';
-import _ from 'lodash';
+import flatten from 'lodash/flatten';
+import cloneDeep from 'lodash/cloneDeep';
 import './App.css';
 import fpTetris from 'fp-tetris';
 import getArgs from './utils/getArgs';
@@ -25,23 +26,22 @@ const createBlocks = ary => (
 
 const args = getArgs();
 
-const Block = props => (<div className="block" style={{backgroundColor: props.color}}>{props.children}</div>);
+const Block = React.memo(({ color, children }) => (
+  <div className="block" style={{backgroundColor: color}}>{children}</div>
+));
 const Blocks = props => (createBlocks(props.window));
 
-const keyList = [
-  { keyValue: SPACE, keySymbol: 'space'},
-  { keyValue: LEFT, keySymbol: 'left' },
-  { keyValue: UP, keySymbol: 'up' },
-  { keyValue: RIGHT, keySymbol: 'right' },
-  { keyValue: DOWN, keySymbol: 'down' },
-  { keyValue: SKey, keySymbol: 'save' },
-  { keyValue: RKey, keySymbol: 'reload' }
-];
+const KEY_MAP = new Map([
+  [SPACE, 'space'],
+  [LEFT, 'left'],
+  [UP, 'up'],
+  [RIGHT, 'right'],
+  [DOWN, 'down'],
+  [SKey, 'save'],
+  [RKey, 'reload'],
+]);
 
-const getKeySymbol = keyValue => {
-  const found = _.find(keyList, key => (key.keyValue === keyValue));
-  return found ? found.keySymbol : null;
-}
+const getKeySymbol = keyValue => KEY_MAP.get(keyValue) ?? null;
 
 function App() {
   const [state, setState] = useState(() => fpTetris.init({ rows: 17, columns: 12 }));
@@ -52,12 +52,12 @@ function App() {
       setState(s => fpTetris.tick(s));
     }, 700);
 
-    keyboard.keyPressed(e => {
+    const removeKeyListener = keyboard.keyPressed(e => {
       setTimeout(() => {
         setState(s => {
           const symbol = getKeySymbol(e.which);
           if (symbol === 'save') {
-            savedState.current = _.cloneDeep(s);
+            savedState.current = cloneDeep(s);
             return s;
           } else if (symbol === 'reload') {
             return savedState.current ? savedState.current : s;
@@ -68,7 +68,10 @@ function App() {
       });
     });
 
-    return () => clearInterval(timer);
+    return () => {
+      clearInterval(timer);
+      removeKeyListener();
+    };
   }, []);
 
   return args.debug
@@ -76,17 +79,17 @@ function App() {
       <div style={{columns: '400px 3'}}>
         <div className="container">
           <div className="App">
-            <Blocks window={_.flatten(fpTetris.toArray(state)[0])} />
+            <Blocks window={flatten(fpTetris.toArray(state)[0])} />
           </div>
         </div>
         <div className="container">
           <div className="App">
-            <Blocks window={_.flatten(fpTetris.toArray(state)[1])} />
+            <Blocks window={flatten(fpTetris.toArray(state)[1])} />
           </div>
         </div>
         <div className="container">
           <div className="App">
-            <Blocks window={_.flatten(fpTetris.join(state))} />
+            <Blocks window={flatten(fpTetris.join(state))} />
           </div>
         </div>
       </div>
@@ -94,7 +97,7 @@ function App() {
     : (
       <div className="container">
         <div className="App">
-          <Blocks window={_.flatten(fpTetris.join(state))} />
+          <Blocks window={flatten(fpTetris.join(state))} />
         </div>
       </div>
     );
