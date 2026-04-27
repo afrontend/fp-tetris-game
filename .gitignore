@@ -29,3 +29,4 @@ yarn-error.log*
 .tern-project
 .tetris.vimprojects
 tsconfig.json
+/dist
