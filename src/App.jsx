@@ -5,6 +5,7 @@ import cloneDeep from 'lodash/cloneDeep';
 import './App.css';
 import fpTetris from 'fp-tetris';
 import getArgs from './utils/getArgs';
+import getInterval from './utils/getInterval';
 
 const SPACE = 32;
 const LEFT = 37;
@@ -45,11 +46,18 @@ function App() {
   const [state, setState] = useState(() => fpTetris.init({ rows: 17, columns: 12 }));
   const savedState = useRef(null);
 
+  const score = fpTetris.getScore(state);
+  const gameOver = fpTetris.isBlankToolPanel(state);
+
   useEffect(() => {
+    if (gameOver) return;
     const timer = setInterval(() => {
       setState(s => fpTetris.tick(s));
-    }, 700);
+    }, getInterval(score));
+    return () => clearInterval(timer);
+  }, [score, gameOver]);
 
+  useEffect(() => {
     const removeKeyListener = keyboard.keyPressed(e => {
       setTimeout(() => {
         setState(s => {
@@ -65,14 +73,8 @@ function App() {
         });
       });
     });
-
-    return () => {
-      clearInterval(timer);
-      removeKeyListener();
-    };
+    return () => removeKeyListener();
   }, []);
-
-  const score = fpTetris.getScore(state);
 
   return args.debug
     ? (
@@ -100,6 +102,9 @@ function App() {
           {score}
         </div>
         <div className="App" role="application" aria-label="Tetris" tabIndex={0}>
+          {gameOver && (
+            <div className="game-over-overlay" aria-label="Game over">GAME OVER</div>
+          )}
           {state.pause && (
             <div className="pause-overlay" aria-label="Game paused">PAUSED</div>
           )}

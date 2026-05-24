@@ -21,9 +21,9 @@
   width: calc(4vh * 12 + 2px);
 }
 
-.pause-overlay {
+.pause-overlay,
+.game-over-overlay {
   align-items: center;
-  background: rgba(0, 0, 0, 0.55);
   color: white;
   display: flex;
   font-size: 2rem;
@@ -33,6 +33,14 @@
   letter-spacing: 0.1em;
   position: absolute;
   z-index: 10;
+}
+
+.pause-overlay {
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.game-over-overlay {
+  background: rgba(180, 0, 0, 0.75);
 }
 
 .App .block {
