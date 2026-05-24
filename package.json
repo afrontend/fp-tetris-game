@@ -19,7 +19,7 @@
   },
   "private": true,
   "dependencies": {
-    "fp-tetris": "^0.0.16",
+    "fp-tetris": "^0.0.18",
     "keyboard-handler": "^3.0.7",
     "lodash": "^4.17.15",
     "react": "^19.2.6",

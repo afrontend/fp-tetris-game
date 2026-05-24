@@ -2,13 +2,37 @@
   position: relative;
 }
 
+.score {
+  font-size: 1.4rem;
+  font-weight: bold;
+  margin: auto;
+  padding: 4px 0;
+  text-align: center;
+  width: calc(4vh * 12 + 2px);
+}
+
 .App {
   align-items: flex-start;
   background: white;
   display: flex;
   flex-wrap: wrap;
   margin: auto;
+  position: relative;
   width: calc(4vh * 12 + 2px);
+}
+
+.pause-overlay {
+  align-items: center;
+  background: rgba(0, 0, 0, 0.55);
+  color: white;
+  display: flex;
+  font-size: 2rem;
+  font-weight: bold;
+  inset: 0;
+  justify-content: center;
+  letter-spacing: 0.1em;
+  position: absolute;
+  z-index: 10;
 }
 
 .App .block {
@@ -49,5 +73,9 @@
 
   .App .block {
     border-color: #444;
+  }
+
+  .score {
+    color: #eee;
   }
 }

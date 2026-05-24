@@ -11,23 +11,20 @@ const LEFT = 37;
 const UP = 38;
 const RIGHT = 39;
 const DOWN = 40;
+const PKey = 80;
 const SKey = 83;
 const RKey = 82;
 
 const createBlocks = ary => (
   ary.map(
-    (item, index) => (
-      <Block color={item.color} key={index}>
-        {item.count}
-      </Block>
-    )
+    (item, index) => <Block color={item.color} key={index} />
   )
 );
 
 const args = getArgs();
 
-const Block = React.memo(({ color, children }) => (
-  <div className="block" style={{backgroundColor: color}}>{children}</div>
+const Block = React.memo(({ color }) => (
+  <div className="block" style={{backgroundColor: color}} />
 ));
 const Blocks = props => (createBlocks(props.window));
 
@@ -37,6 +34,7 @@ const KEY_MAP = new Map([
   [UP, 'up'],
   [RIGHT, 'right'],
   [DOWN, 'down'],
+  [PKey, 'p'],
   [SKey, 'save'],
   [RKey, 'reload'],
 ]);
@@ -74,6 +72,8 @@ function App() {
     };
   }, []);
 
+  const score = fpTetris.getScore(state);
+
   return args.debug
     ? (
       <div className="debug-layout">
@@ -96,7 +96,13 @@ function App() {
     )
     : (
       <div className="container">
+        <div className="score" aria-live="polite" aria-label={`Score: ${score}`}>
+          {score}
+        </div>
         <div className="App" role="application" aria-label="Tetris" tabIndex={0}>
+          {state.pause && (
+            <div className="pause-overlay" aria-label="Game paused">PAUSED</div>
+          )}
           <Blocks window={flatten(fpTetris.join(state))} />
         </div>
       </div>
