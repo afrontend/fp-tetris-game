@@ -22,17 +22,22 @@
 }
 
 .pause-overlay,
+.game-over-overlay,
+.help-overlay {
+  inset: 0;
+  position: absolute;
+  z-index: 10;
+}
+
+.pause-overlay,
 .game-over-overlay {
   align-items: center;
   color: white;
   display: flex;
   font-size: 2rem;
   font-weight: bold;
-  inset: 0;
   justify-content: center;
   letter-spacing: 0.1em;
-  position: absolute;
-  z-index: 10;
 }
 
 .pause-overlay {
@@ -41,6 +46,26 @@
 
 .game-over-overlay {
   background: rgba(180, 0, 0, 0.75);
+}
+
+.help-overlay {
+  background: rgba(0, 0, 0, 0.82);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.help-overlay table {
+  border-spacing: 0 6px;
+  font-size: 0.95rem;
+}
+
+.help-overlay td:first-child {
+  font-weight: bold;
+  padding-right: 1.2em;
+  text-align: right;
+  white-space: nowrap;
 }
 
 .App .block {

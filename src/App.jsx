@@ -6,15 +6,19 @@ import './App.css';
 import fpTetris from 'fp-tetris';
 import getArgs from './utils/getArgs';
 import getInterval from './utils/getInterval';
+import { getKeySymbol } from './utils/keyMap';
 
-const SPACE = 32;
-const LEFT = 37;
-const UP = 38;
-const RIGHT = 39;
-const DOWN = 40;
-const PKey = 80;
-const SKey = 83;
-const RKey = 82;
+const HELP_ITEMS = [
+  { key: '← →',   action: '좌우 이동' },
+  { key: '↑',     action: '회전' },
+  { key: '↓',     action: '빠르게 내리기' },
+  { key: 'Space', action: '즉시 낙하' },
+  { key: 'P',     action: '일시정지 / 재개' },
+  { key: 'S',     action: '상태 저장' },
+  { key: 'L',     action: '상태 불러오기' },
+  { key: 'R',     action: '배경 회전' },
+  { key: 'H',     action: '도움말 닫기' },
+];
 
 const createBlocks = ary => (
   ary.map(
@@ -29,22 +33,11 @@ const Block = React.memo(({ color }) => (
 ));
 const Blocks = props => (createBlocks(props.window));
 
-const KEY_MAP = new Map([
-  [SPACE, 'space'],
-  [LEFT, 'left'],
-  [UP, 'up'],
-  [RIGHT, 'right'],
-  [DOWN, 'down'],
-  [PKey, 'p'],
-  [SKey, 'save'],
-  [RKey, 'reload'],
-]);
-
-const getKeySymbol = keyValue => KEY_MAP.get(keyValue) ?? null;
-
 function App() {
   const [state, setState] = useState(() => fpTetris.init({ rows: 17, columns: 12 }));
+  const [showHelp, setShowHelp] = useState(false);
   const savedState = useRef(null);
+  const showHelpRef = useRef(false);
 
   const score = fpTetris.getScore(state);
   const gameOver = fpTetris.isBlankToolPanel(state);
@@ -52,24 +45,29 @@ function App() {
   useEffect(() => {
     if (gameOver) return;
     const timer = setInterval(() => {
-      setState(s => fpTetris.tick(s));
+      setState(s => showHelpRef.current ? s : fpTetris.tick(s));
     }, getInterval(score));
     return () => clearInterval(timer);
   }, [score, gameOver]);
 
   useEffect(() => {
     const removeKeyListener = keyboard.keyPressed(e => {
+      const symbol = getKeySymbol(e.which);
+      if (symbol === 'help') {
+        showHelpRef.current = !showHelpRef.current;
+        setShowHelp(h => !h);
+        return;
+      }
       setTimeout(() => {
         setState(s => {
-          const symbol = getKeySymbol(e.which);
           if (symbol === 'save') {
             savedState.current = cloneDeep(s);
             return s;
-          } else if (symbol === 'reload') {
-            return savedState.current ? savedState.current : s;
-          } else {
-            return symbol ? fpTetris.key(symbol, s) : s;
           }
+          if (symbol === 'reload') {
+            return savedState.current ?? s;
+          }
+          return symbol ? fpTetris.key(symbol, s) : s;
         });
       });
     });
@@ -105,8 +103,22 @@ function App() {
           {gameOver && (
             <div className="game-over-overlay" aria-label="Game over">GAME OVER</div>
           )}
-          {state.pause && (
+          {state.pause && !showHelp && (
             <div className="pause-overlay" aria-label="Game paused">PAUSED</div>
+          )}
+          {showHelp && (
+            <div className="help-overlay" role="dialog" aria-label="도움말">
+              <table>
+                <tbody>
+                  {HELP_ITEMS.map(({ key, action }) => (
+                    <tr key={key}>
+                      <td>{key}</td>
+                      <td>{action}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
           <Blocks window={flatten(fpTetris.join(state))} />
         </div>
