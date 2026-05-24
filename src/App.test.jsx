@@ -3,7 +3,7 @@ import { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
 
-jest.mock('keyboard-handler', () => ({ keyPressed: jest.fn() }));
+jest.mock('keyboard-handler', () => ({ keyPressed: jest.fn(() => jest.fn()) }));
 
 it('renders without crashing', () => {
   const div = document.createElement('div');
