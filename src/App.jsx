@@ -1,7 +1,5 @@
 import * as keyboard from 'keyboard-handler';
 import React, { useState, useEffect, useRef } from 'react';
-import flatten from 'lodash/flatten';
-import cloneDeep from 'lodash/cloneDeep';
 import './App.css';
 import fpTetris from 'fp-tetris';
 import getArgs from './utils/getArgs';
@@ -61,7 +59,7 @@ function App() {
       setTimeout(() => {
         setState(s => {
           if (symbol === 'save') {
-            savedState.current = cloneDeep(s);
+            savedState.current = structuredClone(s);
             return s;
           }
           if (symbol === 'reload') {
@@ -79,17 +77,17 @@ function App() {
       <div className="debug-layout">
         <div className="container">
           <div className="App" role="application" aria-label="Tetris debug: board">
-            <Blocks window={flatten(fpTetris.toArray(state)[0])} />
+            <Blocks window={fpTetris.toArray(state)[0].flat()} />
           </div>
         </div>
         <div className="container">
           <div className="App" role="application" aria-label="Tetris debug: piece">
-            <Blocks window={flatten(fpTetris.toArray(state)[1])} />
+            <Blocks window={fpTetris.toArray(state)[1].flat()} />
           </div>
         </div>
         <div className="container">
           <div className="App" role="application" aria-label="Tetris debug: combined">
-            <Blocks window={flatten(fpTetris.join(state))} />
+            <Blocks window={fpTetris.join(state).flat()} />
           </div>
         </div>
       </div>
@@ -120,7 +118,7 @@ function App() {
               </table>
             </div>
           )}
-          <Blocks window={flatten(fpTetris.join(state))} />
+          <Blocks window={fpTetris.join(state).flat()} />
         </div>
       </div>
     );
