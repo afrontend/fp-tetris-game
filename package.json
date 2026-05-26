@@ -1,6 +1,6 @@
 {
   "name": "fp-tetris-game",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "자바스크립트로 만든 tetris 게임",
   "repository": {
     "type": "git",
