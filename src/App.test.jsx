@@ -5,24 +5,26 @@ import App from './App';
 import fpTetris from 'fp-tetris';
 import * as keyboard from 'keyboard-handler';
 
-jest.mock('keyboard-handler', () => ({ keyPressed: jest.fn(cb => jest.fn()) }));
+vi.mock('keyboard-handler', () => ({ keyPressed: vi.fn(cb => vi.fn()) }));
 
-jest.mock('fp-tetris', () => {
-  const actual = jest.requireActual('fp-tetris');
+vi.mock('fp-tetris', async () => {
+  const actual = await vi.importActual('fp-tetris');
   return {
     ...actual,
-    isBlankToolPanel: jest.fn().mockReturnValue(false),
+    default: {
+      ...actual.default,
+      isBlankToolPanel: vi.fn().mockReturnValue(false),
+    },
   };
 });
 
 afterEach(() => {
   fpTetris.isBlankToolPanel.mockReturnValue(false);
   keyboard.keyPressed.mockClear();
-  jest.clearAllTimers();
-  jest.useRealTimers();
+  vi.clearAllTimers();
+  vi.useRealTimers();
 });
 
-// 렌더 후 키보드 핸들러 콜백을 꺼내는 헬퍼
 const getKeyboardCallback = () => keyboard.keyPressed.mock.calls[0][0];
 
 it('renders without crashing', () => {
@@ -33,7 +35,7 @@ it('renders without crashing', () => {
 });
 
 it('unmount 시 타이머가 정리된다', () => {
-  const spy = jest.spyOn(global, 'clearInterval');
+  const spy = vi.spyOn(global, 'clearInterval');
   const div = document.createElement('div');
   let root;
   act(() => { root = createRoot(div); root.render(<App />); });
@@ -53,7 +55,7 @@ it('게임오버 상태에서 GAME OVER 오버레이가 표시된다', () => {
 
 it('게임오버 상태에서 타이머가 시작되지 않는다', () => {
   fpTetris.isBlankToolPanel.mockReturnValue(true);
-  const spy = jest.spyOn(global, 'setInterval');
+  const spy = vi.spyOn(global, 'setInterval');
   const div = document.createElement('div');
   let root;
   act(() => { root = createRoot(div); root.render(<App />); });
@@ -97,16 +99,15 @@ it('H키를 두 번 누르면 도움말 오버레이가 닫힌다', () => {
 });
 
 it('도움말이 열려 있는 동안 tick이 실행되지 않는다', () => {
-  jest.useFakeTimers();
+  vi.useFakeTimers();
   const div = document.createElement('div');
   let root;
   act(() => { root = createRoot(div); root.render(<App />); });
 
-  // H키로 도움말 열기
   act(() => { getKeyboardCallback()({ which: 72 }); });
 
-  const tickSpy = jest.spyOn(fpTetris, 'tick');
-  act(() => { jest.advanceTimersByTime(800); }); // 700ms 인터벌 1회 경과
+  const tickSpy = vi.spyOn(fpTetris, 'tick');
+  act(() => { vi.advanceTimersByTime(800); });
 
   expect(tickSpy).not.toHaveBeenCalled();
   tickSpy.mockRestore();
