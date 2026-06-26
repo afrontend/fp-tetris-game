@@ -18,32 +18,28 @@ const HELP_ITEMS = [
   { key: 'H',     action: '도움말 닫기' },
 ];
 
-const createBlocks = ary => (
-  ary.map(
-    (item, index) => <Block color={item.color} key={index} />
-  )
-);
-
 const args = getArgs();
 
 const Block = React.memo(({ color }) => (
-  <div className="block" style={{backgroundColor: color}} />
+  <div className="block" style={{ backgroundColor: color }} />
 ));
-const Blocks = props => (createBlocks(props.window));
+
+const Blocks = ({ blocks }) =>
+  blocks.map((item, index) => <Block color={item.color} key={index} />);
 
 function App() {
-  const [state, setState] = useState(() => fpTetris.init({ rows: 17, columns: 12 }));
+  const [gameState, setGameState] = useState(() => fpTetris.init({ rows: 17, columns: 12 }));
   const [showHelp, setShowHelp] = useState(false);
   const savedState = useRef(null);
   const showHelpRef = useRef(false);
 
-  const score = fpTetris.getScore(state);
-  const gameOver = fpTetris.isBlankToolPanel(state);
+  const score = fpTetris.getScore(gameState);
+  const gameOver = fpTetris.isBlankToolPanel(gameState);
 
   useEffect(() => {
     if (gameOver) return;
     const timer = setInterval(() => {
-      setState(s => showHelpRef.current ? s : fpTetris.tick(s));
+      setGameState(s => showHelpRef.current ? s : fpTetris.tick(s));
     }, getInterval(score));
     return () => clearInterval(timer);
   }, [score, gameOver]);
@@ -56,8 +52,10 @@ function App() {
         setShowHelp(h => !h);
         return;
       }
+      // setTimeout으로 다음 이벤트 루프에서 처리해
+      // 방향키 입력이 setInterval 틱과 겹치지 않도록 함
       setTimeout(() => {
-        setState(s => {
+        setGameState(s => {
           if (symbol === 'save') {
             savedState.current = structuredClone(s);
             return s;
@@ -77,17 +75,17 @@ function App() {
       <div className="debug-layout">
         <div className="container">
           <div className="App" role="application" aria-label="Tetris debug: board">
-            <Blocks window={fpTetris.toArray(state)[0].flat()} />
+            <Blocks blocks={fpTetris.toArray(gameState)[0].flat()} />
           </div>
         </div>
         <div className="container">
           <div className="App" role="application" aria-label="Tetris debug: piece">
-            <Blocks window={fpTetris.toArray(state)[1].flat()} />
+            <Blocks blocks={fpTetris.toArray(gameState)[1].flat()} />
           </div>
         </div>
         <div className="container">
           <div className="App" role="application" aria-label="Tetris debug: combined">
-            <Blocks window={fpTetris.join(state).flat()} />
+            <Blocks blocks={fpTetris.join(gameState).flat()} />
           </div>
         </div>
       </div>
@@ -101,7 +99,7 @@ function App() {
           {gameOver && (
             <div className="game-over-overlay" aria-label="Game over">GAME OVER</div>
           )}
-          {state.pause && !showHelp && (
+          {gameState.pause && !showHelp && (
             <div className="pause-overlay" aria-label="Game paused">PAUSED</div>
           )}
           {showHelp && (
@@ -118,7 +116,7 @@ function App() {
               </table>
             </div>
           )}
-          <Blocks window={fpTetris.join(state).flat()} />
+          <Blocks blocks={fpTetris.join(gameState).flat()} />
         </div>
       </div>
     );
