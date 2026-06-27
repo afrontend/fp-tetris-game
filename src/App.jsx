@@ -96,13 +96,13 @@ function App() {
           {score}
         </div>
         <div className="App" role="application" aria-label="Tetris" tabIndex={0}>
-          {gameOver && (
+          {gameOver ? (
             <div className="game-over-overlay" aria-label="Game over">GAME OVER</div>
-          )}
-          {gameState.pause && !showHelp && (
+          ) : null}
+          {(gameState.pause && !showHelp) ? (
             <div className="pause-overlay" aria-label="Game paused">PAUSED</div>
-          )}
-          {showHelp && (
+          ) : null}
+          {showHelp ? (
             <div className="help-overlay" role="dialog" aria-label="도움말">
               <table>
                 <tbody>
@@ -115,7 +115,7 @@ function App() {
                 </tbody>
               </table>
             </div>
-          )}
+          ) : null}
           <Blocks blocks={fpTetris.join(gameState).flat()} />
         </div>
       </div>
