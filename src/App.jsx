@@ -96,6 +96,9 @@ function App() {
           {score}
         </div>
         <div className="App" role="application" aria-label="Tetris" tabIndex={0}>
+          <a href="https://github.com/afrontend/fp-tetris-game" title="fp-tetris-game" style={{ position: 'absolute', top: 8, right: 8, zIndex: 100 }}>
+            <img style={{ width: 20, height: 20 }} src="https://agvim.files.wordpress.com/2015/08/github-mark-32px.png?w=685" alt="GitHub" />
+          </a>
           {gameOver ? (
             <div className="game-over-overlay" aria-label="Game over">GAME OVER</div>
           ) : null}
