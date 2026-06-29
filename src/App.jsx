@@ -35,6 +35,7 @@ function App() {
   const [showHelp, setShowHelp] = useState(false);
   const savedState = useRef(null);
   const showHelpRef = useRef(false);
+  const appRef = useRef(null);
 
   const score = fpTetris.getScore(gameState);
   const gameOver = fpTetris.isBlankToolPanel(gameState);
@@ -73,6 +74,44 @@ function App() {
     return () => removeKeyListener();
   }, []);
 
+  useEffect(() => {
+    const el = appRef.current;
+    if (!el || !('ontouchstart' in window)) return;
+    let startX = 0, startY = 0;
+    const onTouchStart = e => {
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+      e.preventDefault();
+    };
+    const onTouchEnd = e => {
+      const dx = e.changedTouches[0].clientX - startX;
+      const dy = e.changedTouches[0].clientY - startY;
+      const absDx = Math.abs(dx), absDy = Math.abs(dy);
+      let symbol = null;
+      if (absDx < 10 && absDy < 10) {
+        symbol = 'space';
+      } else if (Math.max(absDx, absDy) > 30) {
+        symbol = absDx > absDy ? (dx > 0 ? 'right' : 'left') : (dy > 0 ? 'down' : 'up');
+      }
+      if (symbol) {
+        setTimeout(() => {
+          setGameState(s => {
+            if (symbol === 'save') { savedState.current = structuredClone(s); return s; }
+            if (symbol === 'reload') return savedState.current ?? s;
+            return fpTetris.key(symbol, s);
+          });
+        });
+      }
+      e.preventDefault();
+    };
+    el.addEventListener('touchstart', onTouchStart, { passive: false });
+    el.addEventListener('touchend', onTouchEnd, { passive: false });
+    return () => {
+      el.removeEventListener('touchstart', onTouchStart);
+      el.removeEventListener('touchend', onTouchEnd);
+    };
+  }, []);
+
   return args.debug
     ? (
       <div className="debug-layout">
@@ -102,7 +141,7 @@ function App() {
           <a href="https://github.com/afrontend/fp-tetris-game" title="fp-tetris-game" style={{ position: 'absolute', top: 8, right: 8, zIndex: 100 }}>
             <img style={{ width: 20, height: 20 }} src="https://agvim.files.wordpress.com/2015/08/github-mark-32px.png?w=685" alt="GitHub" />
           </a>
-          <div className="App" role="application" aria-label="Tetris" tabIndex={0}>
+          <div ref={appRef} className="App" role="application" aria-label="Tetris" tabIndex={0}>
           {gameOver ? (
             <div className="game-over-overlay" aria-label="Game over">GAME OVER</div>
           ) : null}
