@@ -98,10 +98,11 @@ function App() {
         <div className="score" aria-live="polite" aria-label={`Score: ${score}`}>
           {score}
         </div>
-        <div className="App" role="application" aria-label="Tetris" tabIndex={0}>
+        <div className="App-wrapper">
           <a href="https://github.com/afrontend/fp-tetris-game" title="fp-tetris-game" style={{ position: 'absolute', top: 8, right: 8, zIndex: 100 }}>
             <img style={{ width: 20, height: 20 }} src="https://agvim.files.wordpress.com/2015/08/github-mark-32px.png?w=685" alt="GitHub" />
           </a>
+          <div className="App" role="application" aria-label="Tetris" tabIndex={0}>
           {gameOver ? (
             <div className="game-over-overlay" aria-label="Game over">GAME OVER</div>
           ) : null}
@@ -123,6 +124,7 @@ function App() {
             </div>
           ) : null}
           <Blocks blocks={fpTetris.join(gameState).flat()} />
+          </div>
         </div>
       </div>
     );
