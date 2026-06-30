@@ -30,6 +30,7 @@
     "@vitejs/plugin-react": "^6.0.2",
     "gh-pages": "^6.3.0",
     "jsdom": "^29.1.1",
+    "playwright": "^1.61.1",
     "vite": "^8.0.14",
     "vitest": "^4.1.7"
   },
@@ -39,7 +40,8 @@
     "preview": "vite preview",
     "test": "vitest run",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
+    "deploy": "gh-pages -d dist",
+    "screenshot": "node scripts/screenshot.js"
   },
   "browserslist": {
     "production": [
