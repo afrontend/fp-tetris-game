@@ -55,6 +55,7 @@ async function main() {
   await browser.close();
   server.kill();
   console.log(`Saved: ${outPath}`);
+  process.exit(0);
 }
 
 main().catch(err => {
