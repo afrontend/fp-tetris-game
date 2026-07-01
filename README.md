@@ -1,7 +1,7 @@
 # Tetris Game
 > 자바스크립트로 만든 테트리스 게임
 
-[![tetris game screenshot](https://github.com/afrontend/fp-tetris-game/releases/download/screenshots/screenshot.png "tetris game screenshot")](https://afrontend.github.io/fp-tetris-game/)
+[![tetris game demo](https://github.com/afrontend/fp-tetris-game/releases/download/screenshots/demo.gif "tetris game demo")](https://afrontend.github.io/fp-tetris-game/)
 
 [블로그](https://agvim.wordpress.com/2019/01/08/tetris-game-with-javascript/)에서 간단한 설명을 볼 수 있으며 아래 라이브러리를 사용했다.
 

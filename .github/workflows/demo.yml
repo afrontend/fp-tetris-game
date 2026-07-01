@@ -1,0 +1,46 @@
+name: Update Demo GIF
+
+on:
+  push:
+    branches: [master]
+    paths-ignore:
+      - 'README.md'
+      - '.github/workflows/demo.yml'
+
+jobs:
+  demo:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browser
+        run: npx playwright install chromium --with-deps
+
+      - name: Install ffmpeg
+        run: sudo apt-get install -y ffmpeg
+
+      - name: Generate demo GIF
+        run: npm run demo
+
+      - name: Upload demo GIF to GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if ! gh release view screenshots &>/dev/null; then
+            gh release create screenshots \
+              --title "Screenshots" \
+              --notes "Game screenshots (auto-updated)" \
+              --target master
+          fi
+          gh release delete-asset screenshots demo.gif --yes 2>/dev/null || true
+          gh release upload screenshots demo.gif

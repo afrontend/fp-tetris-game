@@ -41,7 +41,8 @@
     "test": "vitest run",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist",
-    "screenshot": "node scripts/screenshot.js"
+    "screenshot": "node scripts/screenshot.js",
+    "demo": "node scripts/demo.js"
   },
   "browserslist": {
     "production": [
