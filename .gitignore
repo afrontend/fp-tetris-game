@@ -30,3 +30,5 @@ yarn-error.log*
 .tetris.vimprojects
 tsconfig.json
 /dist
+screenshot.png
+game-screenshot.png
