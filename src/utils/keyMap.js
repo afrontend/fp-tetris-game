@@ -4,6 +4,7 @@ const KEY_MAP = new Map([
   [38, 'up'],
   [39, 'right'],
   [40, 'down'],
+  [68, 'debug'],
   [72, 'help'],
   [76, 'reload'],
   [80, 'p'],

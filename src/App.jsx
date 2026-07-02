@@ -15,10 +15,9 @@ const HELP_ITEMS = [
   { key: 'S',     action: '상태 저장' },
   { key: 'L',     action: '상태 불러오기' },
   { key: 'R',     action: '배경 회전' },
+  { key: 'D',     action: '디버그 모드 전환' },
   { key: 'H',     action: '도움말 닫기' },
 ];
-
-const args = getArgs();
 
 const Block = React.memo(({ color }) => (
   <div
@@ -33,6 +32,7 @@ const Blocks = ({ blocks }) =>
 function App() {
   const [gameState, setGameState] = useState(() => fpTetris.init({ rows: 17, columns: 12 }));
   const [showHelp, setShowHelp] = useState(false);
+  const [debugMode, setDebugMode] = useState(() => getArgs().debug !== undefined);
   const savedState = useRef(null);
   const showHelpRef = useRef(false);
   const appRef = useRef(null);
@@ -54,6 +54,10 @@ function App() {
       if (symbol === 'help') {
         showHelpRef.current = !showHelpRef.current;
         setShowHelp(h => !h);
+        return;
+      }
+      if (symbol === 'debug') {
+        setDebugMode(d => !d);
         return;
       }
       // setTimeout으로 다음 이벤트 루프에서 처리해
@@ -112,7 +116,7 @@ function App() {
     };
   }, []);
 
-  return args.debug
+  return debugMode
     ? (
       <div className="debug-layout">
         <div className="container">
