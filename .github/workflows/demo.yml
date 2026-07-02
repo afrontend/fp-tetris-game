@@ -43,4 +43,5 @@ jobs:
               --target master
           fi
           gh release delete-asset screenshots demo.gif --yes 2>/dev/null || true
-          gh release upload screenshots demo.gif
+          gh release delete-asset screenshots preview.png --yes 2>/dev/null || true
+          gh release upload screenshots demo.gif preview.png
