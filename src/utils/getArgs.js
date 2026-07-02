@@ -1,15 +1,10 @@
-const getArgs = (qs) => {
-  const args = {};
+const getArgs = (searchString = window.location.search) => {
   try {
-    const search = qs !== undefined ? qs.split('?')[1].split('#')[0] : window.location.search.split('?')[1];
-    search.split('&').forEach(pair => {
-      const [key, val] = pair.split('=');
-      args[key] = val;
-    });
+    const params = new URLSearchParams(searchString);
+    return Object.fromEntries(params);
   } catch (e) {
-    // no query string
+    return {};
   }
-  return args;
 };
 
 export default getArgs;

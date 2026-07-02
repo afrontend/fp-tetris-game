@@ -32,7 +32,7 @@ const Blocks = ({ blocks }) =>
 function App() {
   const [gameState, setGameState] = useState(() => fpTetris.init({ rows: 17, columns: 12 }));
   const [showHelp, setShowHelp] = useState(false);
-  const [debugMode, setDebugMode] = useState(() => getArgs().debug !== undefined);
+  const [isDebug, setIsDebug] = useState(() => getArgs().debug !== undefined);
   const savedState = useRef(null);
   const showHelpRef = useRef(false);
   const appRef = useRef(null);
@@ -57,7 +57,7 @@ function App() {
         return;
       }
       if (symbol === 'debug') {
-        setDebugMode(d => !d);
+        setIsDebug(d => !d);
         return;
       }
       // setTimeout으로 다음 이벤트 루프에서 처리해
@@ -116,7 +116,7 @@ function App() {
     };
   }, []);
 
-  return debugMode
+  return isDebug
     ? (
       <div className="debug-layout">
         <div className="container">
