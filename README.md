@@ -40,6 +40,10 @@ URL에 `?debug` 쿼리 파라미터를 추가하면 보드, 블록, 합성 뷰�
 
 # Deploy
 
+`master`에 push하면 GitHub Actions가 테스트를 통과한 뒤 자동으로 GitHub Pages에 배포한다.
+
+수동/로컬 배포가 필요하면:
+
     npm run deploy
 
 # Web
