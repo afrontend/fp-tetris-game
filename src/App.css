@@ -89,6 +89,7 @@
   height: calc(4vh + 2px);
   line-height: calc(4vh + 2px);
   text-align: center;
+  touch-action: manipulation;
   width: 4vh;
 }
 
