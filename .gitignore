@@ -33,3 +33,7 @@ tsconfig.json
 screenshot.png
 game-screenshot.png
 demo.gif
+
+.codegraph
+.codegraphignore
+.playwright-cli
