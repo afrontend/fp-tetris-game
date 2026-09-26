@@ -46,8 +46,8 @@ it('renders without crashing', () => {
   act(() => { root.unmount(); });
 });
 
-it('unmount 시 타이머가 정리된다', () => {
-  const spy = vi.spyOn(global, 'clearInterval');
+it('unmount 시 카운트다운 타이머가 정리된다', () => {
+  const spy = vi.spyOn(global, 'clearTimeout');
   const div = document.createElement('div');
   let root;
   act(() => { root = createRoot(div); root.render(<App />); });
@@ -86,11 +86,12 @@ it('정상 상태에서 GAME OVER 오버레이가 표시되지 않는다', () =>
 
 // ── 도움말 오버레이 (H 키) ──────────────────────────────────────────
 
-it('H키(72)를 누르면 도움말 오버레이가 표시된다', () => {
+it('카운트다운 후 H키(72)를 누르면 도움말 오버레이가 표시된다', () => {
+  vi.useFakeTimers();
   const div = document.createElement('div');
   let root;
   act(() => { root = createRoot(div); root.render(<App />); });
-
+  act(() => { vi.advanceTimersByTime(3000); });
   act(() => { getKeyboardCallback()({ which: 72 }); });
 
   expect(div.querySelector('.help-overlay')).not.toBeNull();
@@ -98,10 +99,12 @@ it('H키(72)를 누르면 도움말 오버레이가 표시된다', () => {
 });
 
 it('H키를 두 번 누르면 도움말 오버레이가 닫힌다', () => {
+  vi.useFakeTimers();
   const div = document.createElement('div');
   let root;
   act(() => { root = createRoot(div); root.render(<App />); });
 
+  act(() => { vi.advanceTimersByTime(3000); });
   const cb = getKeyboardCallback();
   act(() => { cb({ which: 72 }); });
   act(() => { cb({ which: 72 }); });
@@ -116,6 +119,7 @@ it('도움말이 열려 있는 동안 tick이 실행되지 않는다', () => {
   let root;
   act(() => { root = createRoot(div); root.render(<App />); });
 
+  act(() => { vi.advanceTimersByTime(3000); });
   act(() => { getKeyboardCallback()({ which: 72 }); });
 
   const tickSpy = vi.spyOn(fpTetris, 'tick');
@@ -136,6 +140,7 @@ describe('터치/스와이프 동작', () => {
     vi.useFakeTimers();
     div = document.createElement('div');
     act(() => { root = createRoot(div); root.render(<App />); });
+    act(() => { vi.advanceTimersByTime(3000); });
     el = div.querySelector('.App');
     keySpy = vi.spyOn(fpTetris, 'key');
   });

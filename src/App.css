@@ -33,6 +33,7 @@
 
 .pause-overlay,
 .game-over-overlay,
+.status-overlay,
 .help-overlay {
   border-radius: 8px;
   inset: 0;
@@ -41,7 +42,8 @@
 }
 
 .pause-overlay,
-.game-over-overlay {
+.game-over-overlay,
+.status-overlay {
   align-items: center;
   color: white;
   display: flex;
@@ -57,6 +59,22 @@
 
 .game-over-overlay {
   background: rgba(180, 0, 0, 0.75);
+}
+
+.status-overlay {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.message-overlay {
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  left: 50%;
+  padding: 0.5rem 0.75rem;
+  position: absolute;
+  top: 0.75rem;
+  transform: translateX(-50%);
+  width: max-content;
+  z-index: 20;
 }
 
 .help-overlay {

@@ -5,16 +5,12 @@ describe('getKeySymbol - 키 매핑', () => {
     expect(getKeySymbol(72)).toBe('help');
   });
 
-  it('L키(76)는 reload로 매핑된다', () => {
-    expect(getKeySymbol(76)).toBe('reload');
+  it('L키(76)는 load로 매핑된다', () => {
+    expect(getKeySymbol(76)).toBe('load');
   });
 
-  it('R키(82)는 r(배경 회전)로 매핑된다', () => {
-    expect(getKeySymbol(82)).toBe('r');
-  });
-
-  it('R키는 더 이상 reload가 아니다', () => {
-    expect(getKeySymbol(82)).not.toBe('reload');
+  it('R키(82)는 더 이상 매핑되지 않는다', () => {
+    expect(getKeySymbol(82)).toBeNull();
   });
 
   it('P키(80)는 p(일시정지)로 매핑된다', () => {

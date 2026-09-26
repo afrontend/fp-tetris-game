@@ -166,7 +166,7 @@ async function main() {
 
   await page.setViewportSize({ width: WIDTH, height: HEIGHT });
   await page.goto(url);
-  await page.waitForTimeout(1200); // wait for game to start and first piece to appear
+  await page.waitForTimeout(3200); // 3초 카운트다운 후 게임 시작 대기
 
   for (const moves of pieceMoves) {
     for (const k of moves) {

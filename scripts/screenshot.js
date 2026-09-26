@@ -159,9 +159,9 @@ async function main() {
 
   await page.setViewportSize({ width: 480, height: 760 });
   await page.goto(url);
-  await page.waitForTimeout(500);
+  await page.waitForTimeout(3200);
 
-  // H: show help overlay → pauses tick timer, state.pause stays false so key events still work
+  // 도움말이 열린 동안 게임 조작과 tick이 모두 멈추는지 확인한다.
   await page.keyboard.press('h');
   await page.waitForTimeout(100);
 

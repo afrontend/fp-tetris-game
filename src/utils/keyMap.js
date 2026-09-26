@@ -6,9 +6,8 @@ const KEY_MAP = new Map([
   [40, 'down'],
   [68, 'debug'],
   [72, 'help'],
-  [76, 'reload'],
+  [76, 'load'],
   [80, 'p'],
-  [82, 'r'],
   [83, 'save'],
 ]);
 
