@@ -5,6 +5,8 @@ on:
     branches: [master]
     paths-ignore:
       - 'README.md'
+      - 'AGENTS.md'
+      - 'CLAUDE.md'
       - '.github/workflows/demo.yml'
       - '.github/workflows/screenshot.yml'
 
