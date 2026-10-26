@@ -1,0 +1,26 @@
+name: Test
+
+# master push 는 deploy.yml 이 테스트 후 배포하므로, 여기서는 PR(Dependabot 포함)만 검증한다.
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      # action 은 커밋 SHA 로 고정한다 (Dependabot 이 갱신).
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
