@@ -66,4 +66,4 @@ URL에 `?debug` 쿼리 파라미터를 추가하면 보드, 블록, 합성 뷰�
 https://afrontend.github.io/fp-tetris-game/
 
 # License
-MIT © [Bob Hwang](https://afrontend.github.io)
+MIT © [afrontend](https://afrontend.github.io)
