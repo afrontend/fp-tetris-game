@@ -32,7 +32,7 @@ Pushing to `master` runs GitHub Actions:
 - `deploy.yml` — `npm ci` → `npm test` (gate) → `npm run build` → publish `dist/` to the `gh-pages` branch
 - `screenshot.yml` / `demo.yml` — regenerate `screenshot.png` / `demo.gif` and upload them to the `screenshots` GitHub release (README images point there)
 
-PRs (including Dependabot) run `test.yml` (`npm test`). Actions are pinned to commit SHAs with a `# vN` comment and updated via Dependabot (`.github/dependabot.yml`: github-actions + npm, monthly); keep the SHA pin when editing by hand. CI runs Node 24.
+PRs (including Dependabot) run `test.yml` (`npm test`). Actions are pinned to commit SHAs with a `# vN` comment and updated via Dependabot (`.github/dependabot.yml`: github-actions + npm, monthly); keep the SHA pin when editing by hand. CI runs Node 24. `actions/checkout` uses `persist-credentials: false`; release uploads get `GH_TOKEN` per step and the gh-pages deploy passes `github_token` to the action.
 
 `vite.config.js` sets `base: '/fp-tetris-game/'`; keep it in sync with the Pages path.
 
