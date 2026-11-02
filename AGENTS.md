@@ -38,7 +38,8 @@ PRs (including Dependabot) run `test.yml` (`npm test`). Actions are pinned to co
 
 ## Layout
 
-- `src/App.jsx` — the whole game UI
+- `src/App.jsx` — rendering and game-specific parts (help items, debug panel labels, overlays)
+- `src/useGame.js` — game loop, 3-2-1 countdown, keyboard, swipe, quick save/load, status message. **Identical in fp-tetris-game, fp-block-game and fp-snake-game**: copy changes to all three and check with `diff`
 - `src/utils/keyMap.js` — keyCode → key symbol (`left`/`right`/`up`/`down`/`space`, plus app keys `p`, `save`, `load`, `debug`, `help`)
 - `src/utils/getArgs.js` — URL query params (`?debug` enables debug mode)
 - `src/*.test.jsx`, `src/utils/*.test.js` — vitest + Testing Library; setup in `src/setupTests.js`
@@ -46,8 +47,8 @@ PRs (including Dependabot) run `test.yml` (`npm test`). Actions are pinned to co
 
 ## App.jsx pattern
 
-1. `useState(() => fpTetris.init({ rows: 17, columns: 12 }))` — game state
-2. `setInterval(() => setGameState(s => fpTetris.tick(s)), fpTetris.getTickInterval(state))` — game loop; a 3-2-1 countdown runs before it starts
-3. `keyboard-handler` `keyPressed` → `getKeySymbol` → `fpTetris.key(symbol, state)`; `S`/`L` quick save/load via `serializeState`/`restoreState`, `H` help overlay, `D` debug
-4. `fpTetris.join(state).flat()` → `{ color }` cells rendered as memoized `<div class="block">` (`'grey'` = empty)
-5. Touch: swipe / tap detection on the container element
+1. `const { gameState, showHelp, isDebug, countdown, message, appRef } = useGame(fpTetris, { createState: () => fpTetris.init({ rows: 17, columns: 12 }), initialDebug, isOver: fpTetris.isBlankToolPanel })`
+2. The hook ticks with `setInterval(…, fpTetris.getTickInterval(state))` after the countdown, skipping ticks while help is open (and stopping when `isOver` is true)
+3. Keys: `keyboard-handler` → `getKeySymbol` → `fpTetris.key(symbol, state)`; `S`/`L` quick save/load via `serializeState`/`restoreState`, `H` help overlay, `D` debug. Taps map to `space`, swipes to the strongest direction (`swipeToSymbol`)
+4. `fpTetris.join(state).flat()` → `{ color }` cells rendered as `<div class="block">` (`'grey'` = empty)
+5. Game-specific UI stays in `App.jsx`: score (`getScore`), game-over overlay
