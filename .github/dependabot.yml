@@ -25,6 +25,9 @@ updates:
       # 먼저 맞는 그룹에 들어가므로 fp-* 그룹을 앞에 둔다.
       game-libraries:
         patterns: ['fp-*']
+      # react 와 react-dom 은 버전이 정확히 같아야 하므로 한 PR 로 올린다.
+      react:
+        patterns: ['react', 'react-dom']
       dev-dependencies:
         dependency-type: development
         update-types: [minor, patch]
