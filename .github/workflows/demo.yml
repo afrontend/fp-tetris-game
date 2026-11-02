@@ -12,6 +12,8 @@ on:
 jobs:
   demo:
     runs-on: ubuntu-latest
+    # 미러가 멈추면 기본값(6시간)까지 기다리므로 job 시간을 제한한다.
+    timeout-minutes: 15
     permissions:
       contents: write
     # 쓰기 권한이 있는 job 이므로 action 은 커밋 SHA 로 고정한다 (Dependabot 이 갱신).
@@ -32,7 +34,10 @@ jobs:
         run: npx playwright install chromium --with-deps
 
       - name: Install ffmpeg
-        run: sudo apt-get install -y ffmpeg
+        timeout-minutes: 5
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends ffmpeg
 
       - name: Generate demo GIF
         run: npm run demo
